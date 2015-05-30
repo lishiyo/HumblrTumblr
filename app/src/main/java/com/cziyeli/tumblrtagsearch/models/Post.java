@@ -35,6 +35,7 @@ public class Post {
     @SerializedName("caption")
     public String mCaption;
 
+    // [ {caption, alt_sizes, original_size: {} }, {caption, alt_sizes, original_size} ]
     @SerializedName("photos")
     public Photo[] mPhotos;
 

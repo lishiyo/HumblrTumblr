@@ -7,13 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cziyeli.tumblrtagsearch.Config;
 import com.cziyeli.tumblrtagsearch.R;
 import com.cziyeli.tumblrtagsearch.models.Post;
-import com.squareup.picasso.Picasso;
 
 /**
  * https://api.tumblr.com/v2/tagged?tag=lol&api_key=fuiKNFp9vQFvjLNvx4sUwti4Yb5yGutBN4Xh10LXZhhRKjWlV4
@@ -67,16 +66,23 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     /** VIEWHOLDER **/
 
+
+    /*
+    Change from ListView - rather than checking for a tag on a view in getView() before deciding to create a new instance instead of reusing an old one, RecyclerView API takes care of all the logic.
+    Two methods implement view construction and reuse: onCreateViewHolder, onBindViewHolder
+    */
+
     @Override
     public PostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView;
+        Context context = parent.getContext();
 
         if (viewType == TYPE_PHOTO) {
-            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_item_photo, parent, false);
-            return new ViewHolder(itemView, viewType);
+            itemView = LayoutInflater.from(context).inflate(R.layout.post_item_photo, parent, false);
+            return new ViewHolder(itemView, viewType, context);
         } else if (viewType == TYPE_TEXT) {
-            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_item_text, parent, false);
-            return new ViewHolder(itemView, viewType);
+            itemView = LayoutInflater.from(context).inflate(R.layout.post_item_text, parent, false);
+            return new ViewHolder(itemView, viewType, context);
         }
 
         return null;
@@ -91,24 +97,35 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         viewHolder.noteCount.setText(post.mNoteCount);
 
         if (viewHolder.postType == TYPE_PHOTO) {
-            String photoUrl = null;
 
+            // for each Photo in Photo[], map photo's url
             if (post.mPhotos != null) {
-                // for each photo in mPhotos, send in photo <-- first for now
-                photoUrl =  post.mPhotos[0].originalPhoto.originalPhotoUrl;
+                String[] photoUrls = new String[post.mPhotos.length];
+                String currPhotoUrl;
+                for (int i = 0; i < post.mPhotos.length; i++) {
+                    currPhotoUrl = post.mPhotos[i].originalPhoto.originalPhotoUrl;
+                    photoUrls[i] = currPhotoUrl;
+                }
+
+                Log.d(Config.DEBUG_TAG, "post mPhotos has photos, length: " + photoUrls.length);
+                viewHolder.photoListAdapter.updateData(photoUrls);
             }
 
-
-            if (photoUrl != null) {
-                Picasso.with(this.mContext)
-                        .load(photoUrl)
-                        .placeholder(R.mipmap.ic_launcher)
-                        .into(viewHolder.photoMain);
-            } else {
-                viewHolder.photoMain.setImageResource(R.mipmap.ic_launcher);
-            }
-
-            Log.d(Config.DEBUG_TAG, "onBindViewHolder PHOTO url: " + photoUrl);
+//            String photoUrl = null;
+//
+//            if (post.mPhotos != null) {
+//                // for each photo in mPhotos, send in photo <-- first for now
+//                photoUrl =  post.mPhotos[0].originalPhoto.originalPhotoUrl;
+//            }
+//
+//            if (photoUrl != null) {
+//                Picasso.with(this.mContext)
+//                        .load(photoUrl)
+//                        .placeholder(R.mipmap.ic_launcher)
+//                        .into(viewHolder.photoMain);
+//            } else {
+//                viewHolder.photoMain.setImageResource(R.mipmap.ic_launcher);
+//            }
 
             if (post.mCaption != null && post.mCaption.length() > 0) {
                 viewHolder.photoCaption.setText(Html.fromHtml(post.mCaption));
@@ -134,22 +151,27 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public int postType;
 
         // PHOTO POSTS
-        public ImageView photoMain;
+//        public ImageView photoMain;
         public TextView photoCaption;
+        public ListView photoListView;
+        public PhotoListAdapter photoListAdapter;
 
         // TEXT POSTS
         public TextView textTitle;
         public TextView textBody;
 
-        public ViewHolder(View itemView, int viewType) {
+        public ViewHolder(View itemView, int viewType, Context context) {
             super(itemView);
             postType = viewType;
             blogName = (TextView) itemView.findViewById(R.id.postBlogName);
             noteCount = (TextView) itemView.findViewById(R.id.postNoteCount);
 
             if (viewType == TYPE_PHOTO) {
-                photoMain = (ImageView) itemView.findViewById(R.id.postImagePerm);
+//                photoMain = (ImageView) itemView.findViewById(R.id.postImagePerm);
                 photoCaption = (TextView) itemView.findViewById(R.id.postPhotoCaption);
+                photoListView = (ListView) itemView.findViewById(R.id.postPhotoList);
+                photoListAdapter = new PhotoListAdapter(context, LayoutInflater.from(context));
+                photoListView.setAdapter(photoListAdapter);
             } else if (viewType == TYPE_TEXT) {
                 textTitle = (TextView) itemView.findViewById(R.id.textTitle);
                 textBody = (TextView) itemView.findViewById(R.id.textBody);

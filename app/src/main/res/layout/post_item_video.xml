@@ -18,12 +18,17 @@
             android:layout_width="match_parent"
             android:layout_alignParentTop="true"></include>
 
-        <TextView
-            android:id="@+id/videoEmbedCode"
+        <WebView
+            android:id="@+id/postVideoPlayer"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/postVideoCaption"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
 
         <include layout="@layout/post_footer"
             android:layout_height="wrap_content"

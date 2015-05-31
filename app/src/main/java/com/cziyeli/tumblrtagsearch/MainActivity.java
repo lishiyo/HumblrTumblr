@@ -6,13 +6,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -20,27 +19,46 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.cziyeli.tumblrtagsearch.adapters.PostAdapter;
 import com.cziyeli.tumblrtagsearch.models.Post;
 import com.google.gson.Gson;
+import com.malinskiy.superrecyclerview.OnMoreListener;
+import com.malinskiy.superrecyclerview.SuperRecyclerView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 public class MainActivity extends AppCompatActivity {
     private JsonObjectRequest request;
-    private RecyclerView mRecyclerView;
+    private SuperRecyclerView mRecyclerView;
     private PostAdapter mAdapter;
-    private Post[] mPosts;
+    private String currQueryTag;
+    Button mLoadMoreBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // setup RecyclerView
-        setupViews(mPosts);
+        currQueryTag = "";
 
-        Log.d(Config.DEBUG_TAG, "onCreate MainACTIVITY");
+        // setup RecyclerView for Posts
+        setupPostViews();
+
+        // handle search
         handleIntent(getIntent());
+    }
+
+    private void setupPostViews() {
+        this.mRecyclerView = (SuperRecyclerView) findViewById(R.id.list);
+        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        this.mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        this.mAdapter = new PostAdapter(this, getLayoutInflater());
+        this.mRecyclerView.setAdapter(mAdapter);
+
+
     }
 
     @Override
@@ -94,21 +112,22 @@ public class MainActivity extends AppCompatActivity {
         return builtUri.build().toString();
     }
 
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            String urlQuery = buildQueryString(query);
-            sendTumblrRequest(urlQuery);
-        }
+    private String buildQueryString(String query, String timestamp){
+        Uri.Builder builtUri = Uri.parse(Config.TAGGED_BASE_URL).buildUpon()
+                .appendQueryParameter("limit", Config.LIMIT)
+                .appendQueryParameter("api_key", Config.API_KEY)
+                .appendQueryParameter("before", timestamp)
+                .appendQueryParameter("tag", query);
+
+        return builtUri.build().toString();
     }
 
-    private void setupViews(Post[] posts) {
-        mRecyclerView = (RecyclerView)findViewById(R.id.list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mAdapter = new PostAdapter(posts, this);
-        mRecyclerView.setAdapter(mAdapter);
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            this.currQueryTag = intent.getStringExtra(SearchManager.QUERY);
+            String urlQuery = buildQueryString(currQueryTag);
+            sendTumblrRequest(urlQuery);
+        }
     }
 
     private void sendTumblrRequest(String urlQuery){
@@ -121,10 +140,25 @@ public class MainActivity extends AppCompatActivity {
         public void onResponse(JSONObject response){
             try {
                 String jsonData = response.getString("response");
-
                 Gson gson = new Gson();
                 Post[] postResults = gson.fromJson(jsonData, Post[].class);
-                setupViews(postResults);
+                final ArrayList<Post> postResultsArray = new ArrayList<>(Arrays.asList(postResults));
+
+                mAdapter.updateData(postResultsArray);
+
+                mRecyclerView.removeMoreListener();
+                mRecyclerView.setupMoreListener(new OnMoreListener() {
+                    @Override
+                    public void onMoreAsked(int numberOfItems, int numberBeforeMore, int currentItemPos) {
+                        // Fetch more from Api or DB
+                        Log.d(Config.DEBUG_TAG, "ON MORE ASKED! numItems " + String.valueOf(numberOfItems) + " and beforeMore: " + String.valueOf(numberBeforeMore) + " vs currentItemPos " + String.valueOf(currentItemPos));
+                        String lastTimestamp = mAdapter.getPost(currentItemPos).mTimestamp;
+                        String urlQuery = buildQueryString(currQueryTag, lastTimestamp);
+
+                        sendTumblrRequest(urlQuery);
+                    }
+                }, 1);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +17,8 @@ import com.cziyeli.tumblrtagsearch.Config;
 import com.cziyeli.tumblrtagsearch.R;
 import com.cziyeli.tumblrtagsearch.models.Post;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 /**
  * https://api.tumblr.com/v2/tagged?tag=lol&api_key=fuiKNFp9vQFvjLNvx4sUwti4Yb5yGutBN4Xh10LXZhhRKjWlV4
@@ -26,23 +30,31 @@ import com.squareup.picasso.Picasso;
  */
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
-    private Post[] mPosts;
     private Context mContext;
+    private LayoutInflater mInflater;
+    public ArrayList<Post> mPosts;
     private static final int TYPE_PHOTO = 0;
     private static final int TYPE_TEXT = 1;
     private static final int TYPE_VIDEO = 2;
+    public static final int TYPE_BUTTON = 99;
 
     /** CONSTRUCTOR **/
-    public PostAdapter(Post[] posts, Context context) {
-        Log.d(Config.DEBUG_TAG, "creating PostAdapter");
-        this.mPosts = posts;
+    public PostAdapter(Context context, LayoutInflater inflater) {
         this.mContext = context;
+        this.mInflater = inflater;
+        this.mPosts = new ArrayList<Post>();
+    }
+
+    public void updateData(ArrayList<Post> data) {
+        this.mPosts.addAll(data);
+        Log.d(Config.DEBUG_TAG, "UPDATE DATA count: " + String.valueOf(getItemCount()));
+        notifyDataSetChanged();
     }
 
     /** UTILITIES **/
     public Post getPost(int position) {
-        if (mPosts != null && position >=0 && position < mPosts.length) {
-            return mPosts[position];
+        if (mPosts != null && position >=0 && position < mPosts.size()) {
+            return mPosts.get(position);
         } else {
             return null;
         }
@@ -50,7 +62,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mPosts == null ? 0 : mPosts.length;
+        return mPosts == null ? 0 : mPosts.size();
     }
 
     // Check what type of view is being passed
@@ -58,16 +70,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public int getItemViewType(int position) {
         Post post = getPost(position);
 
-        if ("photo".equals(post.mType)) {
-            return TYPE_PHOTO;
-        } else {
-            return TYPE_TEXT;
+        switch (post.mType) {
+            case "photo":
+                return TYPE_PHOTO;
+            case "text":
+                return TYPE_TEXT;
+            case "video":
+                return TYPE_VIDEO;
+            default:
+                return TYPE_TEXT;
         }
+
     }
 
 
     /** VIEWHOLDER **/
-
 
     /*
     Change from ListView - rather than checking for a tag on a view in getView() before deciding to create a new instance instead of reusing an old one, RecyclerView API takes care of all the logic.
@@ -76,18 +93,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     @Override
     public PostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView;
+        View itemView = null;
         Context context = parent.getContext();
 
-        if (viewType == TYPE_PHOTO) {
-            itemView = LayoutInflater.from(context).inflate(R.layout.post_item_photo, parent, false);
-            return new ViewHolder(itemView, viewType, context);
-        } else if (viewType == TYPE_TEXT) {
-            itemView = LayoutInflater.from(context).inflate(R.layout.post_item_text, parent, false);
-            return new ViewHolder(itemView, viewType, context);
+        switch (viewType) {
+            case TYPE_PHOTO:
+                itemView = LayoutInflater.from(context).inflate(R.layout.post_item_photo, parent, false);
+                break;
+            case TYPE_TEXT:
+                itemView = LayoutInflater.from(context).inflate(R.layout.post_item_text, parent, false);
+                break;
+            case TYPE_VIDEO:
+                itemView = LayoutInflater.from(context).inflate(R.layout.post_item_video, parent, false);
+                break;
+            default:
+                break;
         }
 
-        return null;
+        return (itemView != null) ? new ViewHolder(itemView, viewType) : null;
+
     }
 
     // Called when the item in a row must be displayed
@@ -140,24 +164,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                 }
 
-//                viewHolder.photoListAdapter.updateData(photoUrls);
             }
-
-//            String photoUrl = null;
-//
-//            if (post.mPhotos != null) {
-//                // for each photo in mPhotos, send in photo <-- first for now
-//                photoUrl =  post.mPhotos[0].originalPhoto.originalPhotoUrl;
-//            }
-//
-//            if (photoUrl != null) {
-//                Picasso.with(this.mContext)
-//                        .load(photoUrl)
-//                        .placeholder(R.mipmap.ic_launcher)
-//                        .into(viewHolder.photoMain);
-//            } else {
-//                viewHolder.photoMain.setImageResource(R.mipmap.ic_launcher);
-//            }
 
             if (post.mCaption != null && post.mCaption.length() > 0) {
                 viewHolder.photoCaption.setText(Html.fromHtml(post.mCaption));
@@ -169,6 +176,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             }
             if (post.mTextBody != null && post.mTextBody.length() > 0) {
                 viewHolder.textBody.setText(Html.fromHtml(post.mTextBody));
+            }
+        } else if (viewHolder.postType == TYPE_VIDEO) {
+            Log.d(Config.DEBUG_TAG, "viewholder with type video");
+            if (post.mCaption != null && post.mCaption.length() > 0) {
+                viewHolder.videoCaption.setText(Html.fromHtml(post.mCaption));
+            }
+            // take narrowest player out of 250, 400, 500 and display in webView
+            if (post.mVideoPlayers != null && post.mVideoPlayers.length > 0) {
+                Post.VideoPlayer player = post.mVideoPlayers[0];
+                viewHolder.videoPlayerView.loadData(player.embedCode, "text/html", "utf-8");
             }
         }
 
@@ -185,30 +202,42 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public LinearLayout postPhotoLayout;
         public ImageView postPhotoFirst; // we have at least one photo
         public TextView photoCaption;
-//        public ListView photoListView;
-//        public PhotoListAdapter photoListAdapter;
 
         // TEXT POSTS
         public TextView textTitle;
         public TextView textBody;
 
-        public ViewHolder(View itemView, int viewType, Context context) {
+        // VIDEO POSTS
+        public WebView videoPlayerView;
+        public TextView videoCaption;
+
+        public ViewHolder(View itemView, int viewType) {
             super(itemView);
             postType = viewType;
             blogName = (TextView) itemView.findViewById(R.id.postBlogName);
             noteCount = (TextView) itemView.findViewById(R.id.postNoteCount);
             postTags = (TextView) itemView.findViewById(R.id.postTagsRow);
 
-            if (viewType == TYPE_PHOTO) {
-                postPhotoLayout = (LinearLayout) itemView.findViewById(R.id.postPhotoLayout);
-                postPhotoFirst = (ImageView) itemView.findViewById(R.id.postPhotoSingle);
-                photoCaption = (TextView) itemView.findViewById(R.id.postPhotoCaption);
-//                photoListView = (ListView) itemView.findViewById(R.id.postPhotoList);
-//                photoListAdapter = new PhotoListAdapter(context, LayoutInflater.from(context));
-//                photoListView.setAdapter(photoListAdapter);
-            } else if (viewType == TYPE_TEXT) {
-                textTitle = (TextView) itemView.findViewById(R.id.textTitle);
-                textBody = (TextView) itemView.findViewById(R.id.textBody);
+            switch (viewType) {
+                case TYPE_PHOTO:
+                    postPhotoLayout = (LinearLayout) itemView.findViewById(R.id.postPhotoLayout);
+                    postPhotoFirst = (ImageView) itemView.findViewById(R.id.postPhotoSingle);
+                    photoCaption = (TextView) itemView.findViewById(R.id.postPhotoCaption);
+                    break;
+                case TYPE_TEXT:
+                    textTitle = (TextView) itemView.findViewById(R.id.textTitle);
+                    textBody = (TextView) itemView.findViewById(R.id.textBody);
+                    break;
+                case TYPE_VIDEO:
+                    videoCaption = (TextView) itemView.findViewById(R.id.postVideoCaption);
+                    videoPlayerView = (WebView) itemView.findViewById(R.id.postVideoPlayer);
+                    final WebSettings settings = videoPlayerView.getSettings();
+                    settings.setDefaultTextEncodingName("utf-8");
+                    settings.setJavaScriptEnabled(true);
+                    settings.setLoadsImagesAutomatically(true);
+                    break;
+                default:
+                    break;
             }
 
         }

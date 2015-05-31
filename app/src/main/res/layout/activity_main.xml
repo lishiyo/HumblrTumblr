@@ -1,20 +1,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
 
-    <!--<TextView android:text="@string/hello_world" android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content" />-->
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/list"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--tools:context=".MainActivity" />-->
 
-    <android.support.v7.widget.RecyclerView
+    <com.malinskiy.superrecyclerview.SuperRecyclerView
         android:id="@+id/list"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity"
-        />
+        app:scrollbarStyle="insideInset"
+        app:recyclerClipToPadding="false"
+        app:recyclerPadding="16dp"
+        tools:context=".MainActivity" />
 
+    <Button
+        android:id="@+id/loadMore"
+        android:layout_below="@id/list"
+        android:layout_alignParentBottom="true"
+        android:text="@string/load_more"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
 </RelativeLayout>

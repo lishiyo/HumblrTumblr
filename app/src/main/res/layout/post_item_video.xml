@@ -18,23 +18,12 @@
             android:layout_width="match_parent"
             android:layout_alignParentTop="true"></include>
 
-        <LinearLayout
-            android:id="@+id/postPhotoLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/postPhotoSingle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-
         <TextView
-            android:id="@+id/postPhotoCaption"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent" />
+            android:id="@+id/videoEmbedCode"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <include layout="@layout/post_footer"
             android:layout_height="wrap_content"

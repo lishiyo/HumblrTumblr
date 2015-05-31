@@ -7,12 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cziyeli.tumblrtagsearch.Config;
 import com.cziyeli.tumblrtagsearch.R;
 import com.cziyeli.tumblrtagsearch.models.Post;
+import com.squareup.picasso.Picasso;
 
 /**
  * https://api.tumblr.com/v2/tagged?tag=lol&api_key=fuiKNFp9vQFvjLNvx4sUwti4Yb5yGutBN4Xh10LXZhhRKjWlV4
@@ -32,7 +34,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     /** CONSTRUCTOR **/
     public PostAdapter(Post[] posts, Context context) {
-        Log.d(Config.DEBUG_TAG, "create PostAdapter");
+        Log.d(Config.DEBUG_TAG, "creating PostAdapter");
         this.mPosts = posts;
         this.mContext = context;
     }
@@ -93,22 +95,52 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public void onBindViewHolder(PostAdapter.ViewHolder viewHolder, int position) {
         Post post = getPost(position);
 
+        // Every post has blog name, notes count, and tags
         viewHolder.blogName.setText(post.mBlogName);
         viewHolder.noteCount.setText(post.mNoteCount);
+        if (post.mTags.length > 0) {
+            viewHolder.postTags.setText(post.tagsToString());
+        }
 
         if (viewHolder.postType == TYPE_PHOTO) {
 
-            // for each Photo in Photo[], map photo's url
             if (post.mPhotos != null) {
-                String[] photoUrls = new String[post.mPhotos.length];
-                String currPhotoUrl;
-                for (int i = 0; i < post.mPhotos.length; i++) {
-                    currPhotoUrl = post.mPhotos[i].originalPhoto.originalPhotoUrl;
-                    photoUrls[i] = currPhotoUrl;
+
+                Log.d(Config.DEBUG_TAG, "post mPhotos length: " + post.mPhotos.length);
+
+                // Photo posts must have at least one photo
+                String firstPhotoUrl = post.mPhotos[0].originalPhoto.originalPhotoUrl;
+
+                if (firstPhotoUrl != null) {
+                    Picasso.with(this.mContext)
+                            .load(firstPhotoUrl)
+                            .placeholder(R.mipmap.ic_launcher)
+                            .into(viewHolder.postPhotoFirst);
+                } else {
+                    viewHolder.postPhotoFirst.setImageResource(R.mipmap.ic_launcher);
                 }
 
-                Log.d(Config.DEBUG_TAG, "post mPhotos has photos, length: " + photoUrls.length);
-                viewHolder.photoListAdapter.updateData(photoUrls);
+                // If we have more than one photo, dynamically generate ImageView and add to postPhotoLayout
+                if (post.mPhotos.length > 1) {
+                    String nextPhotoUrl;
+
+                    for (int i = 1; i < post.mPhotos.length; i++) {
+                        nextPhotoUrl = post.mPhotos[i].originalPhoto.originalPhotoUrl;
+                        Log.d(Config.DEBUG_TAG, "more than one photo, url: " + nextPhotoUrl);
+
+                        ImageView photoView = new ImageView(mContext);
+                        viewHolder.postPhotoLayout.addView(photoView);
+                        if (nextPhotoUrl != null) {
+                            Picasso.with(this.mContext)
+                                    .load(nextPhotoUrl)
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .into(photoView);
+                        }
+                    }
+
+                }
+
+//                viewHolder.photoListAdapter.updateData(photoUrls);
             }
 
 //            String photoUrl = null;
@@ -132,8 +164,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             }
 
         } else if (viewHolder.postType == TYPE_TEXT) {
-            Log.d(Config.DEBUG_TAG, "onBindViewHolder TEXT: " + post.mTextTitle);
-
             if (post.mTextTitle != null && post.mTextTitle.length() > 0) {
                 viewHolder.textTitle.setText(Html.fromHtml(post.mTextTitle));
             }
@@ -148,13 +178,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView blogName;
         public TextView noteCount;
+        public TextView postTags;
         public int postType;
 
         // PHOTO POSTS
-//        public ImageView photoMain;
+        public LinearLayout postPhotoLayout;
+        public ImageView postPhotoFirst; // we have at least one photo
         public TextView photoCaption;
-        public ListView photoListView;
-        public PhotoListAdapter photoListAdapter;
+//        public ListView photoListView;
+//        public PhotoListAdapter photoListAdapter;
 
         // TEXT POSTS
         public TextView textTitle;
@@ -165,13 +197,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postType = viewType;
             blogName = (TextView) itemView.findViewById(R.id.postBlogName);
             noteCount = (TextView) itemView.findViewById(R.id.postNoteCount);
+            postTags = (TextView) itemView.findViewById(R.id.postTagsRow);
 
             if (viewType == TYPE_PHOTO) {
-//                photoMain = (ImageView) itemView.findViewById(R.id.postImagePerm);
+                postPhotoLayout = (LinearLayout) itemView.findViewById(R.id.postPhotoLayout);
+                postPhotoFirst = (ImageView) itemView.findViewById(R.id.postPhotoSingle);
                 photoCaption = (TextView) itemView.findViewById(R.id.postPhotoCaption);
-                photoListView = (ListView) itemView.findViewById(R.id.postPhotoList);
-                photoListAdapter = new PhotoListAdapter(context, LayoutInflater.from(context));
-                photoListView.setAdapter(photoListAdapter);
+//                photoListView = (ListView) itemView.findViewById(R.id.postPhotoList);
+//                photoListAdapter = new PhotoListAdapter(context, LayoutInflater.from(context));
+//                photoListView.setAdapter(photoListAdapter);
             } else if (viewType == TYPE_TEXT) {
                 textTitle = (TextView) itemView.findViewById(R.id.textTitle);
                 textBody = (TextView) itemView.findViewById(R.id.textBody);

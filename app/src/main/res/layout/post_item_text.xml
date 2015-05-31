@@ -7,7 +7,8 @@
     card_view:cardCornerRadius="5dp"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -15,26 +16,25 @@
             android:id="@+id/postHeader"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_alignParentTop="true"></include>
+            ></include>
 
         <TextView
             android:id="@+id/textTitle"
-            android:layout_below="@id/postHeader"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/textBody"
-            android:layout_below="@id/textTitle"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <include layout="@layout/post_footer"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_below="@id/textBody"
-            android:layout_alignParentBottom="true"></include>
+            android:layout_width="match_parent"></include>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

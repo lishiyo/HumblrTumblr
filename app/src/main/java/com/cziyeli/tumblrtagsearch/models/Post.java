@@ -1,5 +1,7 @@
 package com.cziyeli.tumblrtagsearch.models;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -51,6 +53,15 @@ public class Post {
 
     @SerializedName("thumbnail_url")
     public String mVideoThumbnailUrl;
+
+    public String tagsToString() {
+        String[] convertedTags = new String[this.mTags.length];
+        for (int i = 0; i < this.mTags.length; i++) {
+            String tag = "#" + mTags[i];
+            convertedTags[i] = tag;
+        }
+        return TextUtils.join(" ", convertedTags);
+    }
 
     public static class Photo {
         @SerializedName("caption")

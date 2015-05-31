@@ -11,7 +11,6 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -34,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private SuperRecyclerView mRecyclerView;
     private PostAdapter mAdapter;
     private String currQueryTag;
-    Button mLoadMoreBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         this.mAdapter = new PostAdapter(this, getLayoutInflater());
         this.mRecyclerView.setAdapter(mAdapter);
-
 
     }
 
@@ -100,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         Log.d(Config.DEBUG_TAG, "onNewIntent");
         setIntent(intent);
+        // setup RecyclerView for Posts
+        setupPostViews();
         handleIntent(intent);
     }
 

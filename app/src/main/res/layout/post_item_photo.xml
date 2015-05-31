@@ -3,8 +3,8 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="5dp"
-    card_view:cardCornerRadius="5dp"
+    android:layout_margin="@dimen/cardview_margin"
+    card_view:cardCornerRadius="@dimen/cardview_radius"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -26,6 +26,8 @@
 
             <ImageView
                 android:id="@+id/postPhotoSingle"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal" />
@@ -33,8 +35,7 @@
 
         <TextView
             android:id="@+id/postPhotoCaption"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent" />
+            style="@style/ContentText" />
 
         <include layout="@layout/post_footer"
             android:layout_height="wrap_content"

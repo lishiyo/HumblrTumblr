@@ -22,6 +22,24 @@
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
         <item name="android:textSize">@dimen/text_main</item>
+        <!--<item name="android:padding">@dimen/text_padding</item>-->
+    </style>
+
+    <style name="ContentText">
+        <item name="android:paddingLeft">@dimen/text_padding</item>
+        <item name="android:paddingRight">@dimen/text_padding</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">@dimen/text_padding</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">@dimen/text_main</item>
+    </style>
+
+    <style name="TagRow">
+        <item name="android:textSize">@dimen/text_main</item>
+        <item name="android:padding">@dimen/text_padding</item>
+        <item name="android:textColor">@color/gray_light</item>
     </style>
 
 </resources>

@@ -3,8 +3,8 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="5dp"
-    card_view:cardCornerRadius="5dp"
+    android:layout_margin="@dimen/cardview_margin"
+    card_view:cardCornerRadius="@dimen/cardview_radius"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -20,16 +20,13 @@
 
         <TextView
             android:id="@+id/textTitle"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            style="@style/ContentText"
+            android:textSize="@dimen/text_title"
+            android:textColor="@color/gray_dark" />
 
         <TextView
             android:id="@+id/textBody"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            style="@style/ContentText" />
 
         <include layout="@layout/post_footer"
             android:layout_height="wrap_content"

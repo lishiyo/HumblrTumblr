@@ -2,4 +2,8 @@
 <resources>
     <color name="background">#33e5b6</color>
     <color name="mainBackground">#e9eeed</color>
+
+    <color name="gray">#7e7e7e</color>
+    <color name="gray_light">#d3d3d3</color>
+    <color name="gray_dark">#212121</color>
 </resources>

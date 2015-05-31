@@ -75,6 +75,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 return TYPE_PHOTO;
             case "text":
                 return TYPE_TEXT;
+            case "chat":
+                return TYPE_TEXT; // same fields as text
             case "video":
                 return TYPE_VIDEO;
             default:
@@ -130,6 +132,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             if (post.mPhotos != null) {
 
+                // Remove previous child views
+                int numChildViews = viewHolder.postPhotoLayout.getChildCount();
+                if (numChildViews > 0) {
+                    viewHolder.postPhotoLayout.removeViews(1, numChildViews - 1);
+                }
+
                 Log.d(Config.DEBUG_TAG, "post mPhotos length: " + post.mPhotos.length);
 
                 // Photo posts must have at least one photo
@@ -153,6 +161,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                         Log.d(Config.DEBUG_TAG, "more than one photo, url: " + nextPhotoUrl);
 
                         ImageView photoView = new ImageView(mContext);
+                        photoView.setAdjustViewBounds(true);
+                        photoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                         viewHolder.postPhotoLayout.addView(photoView);
                         if (nextPhotoUrl != null) {
                             Picasso.with(this.mContext)
@@ -168,19 +178,31 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             if (post.mCaption != null && post.mCaption.length() > 0) {
                 viewHolder.photoCaption.setText(Html.fromHtml(post.mCaption));
+                viewHolder.photoCaption.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.photoCaption.setVisibility(View.GONE);
             }
 
         } else if (viewHolder.postType == TYPE_TEXT) {
             if (post.mTextTitle != null && post.mTextTitle.length() > 0) {
                 viewHolder.textTitle.setText(Html.fromHtml(post.mTextTitle));
+                viewHolder.textTitle.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.textTitle.setVisibility(View.GONE);
             }
             if (post.mTextBody != null && post.mTextBody.length() > 0) {
                 viewHolder.textBody.setText(Html.fromHtml(post.mTextBody));
+                viewHolder.textBody.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.textBody.setVisibility(View.GONE);
             }
         } else if (viewHolder.postType == TYPE_VIDEO) {
             Log.d(Config.DEBUG_TAG, "viewholder with type video");
             if (post.mCaption != null && post.mCaption.length() > 0) {
+                viewHolder.videoCaption.setVisibility(View.VISIBLE);
                 viewHolder.videoCaption.setText(Html.fromHtml(post.mCaption));
+            }  else {
+                viewHolder.videoCaption.setVisibility(View.GONE);
             }
             // take narrowest player out of 250, 400, 500 and display in webView
             if (post.mVideoPlayers != null && post.mVideoPlayers.length > 0) {

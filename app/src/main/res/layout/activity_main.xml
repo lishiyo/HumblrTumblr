@@ -24,14 +24,16 @@
         android:layout_height="match_parent"
         app:scrollbarStyle="insideInset"
         app:recyclerClipToPadding="false"
-        app:recyclerPadding="16dp"
+        app:layout_empty="@layout/posts_blank"
+        app:layout_moreProgress="@layout/posts_progress"
+        app:recyclerPadding="@dimen/cardview_padding"
         tools:context=".MainActivity" />
 
-    <Button
-        android:id="@+id/loadMore"
-        android:layout_below="@id/list"
-        android:layout_alignParentBottom="true"
-        android:text="@string/load_more"
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
+    <!--<Button-->
+        <!--android:id="@+id/loadMore"-->
+        <!--android:layout_below="@id/list"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:text="@string/load_more"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="100dp" />-->
 </RelativeLayout>

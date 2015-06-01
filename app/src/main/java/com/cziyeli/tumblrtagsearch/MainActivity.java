@@ -134,31 +134,39 @@ public class MainActivity extends AppCompatActivity {
         VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 
+    // Response listener for Volley
     private class ResponseListener implements Response.Listener<JSONObject> {
         @Override
         public void onResponse(JSONObject response){
+            mRecyclerView.hideMoreProgress();
+
             try {
                 String jsonData = response.getString("response");
                 Gson gson = new Gson();
                 Post[] postResults = gson.fromJson(jsonData, Post[].class);
-
                 final ArrayList<Post> fullPostResults = new ArrayList<>(Arrays.asList(postResults));
-
 
                 mAdapter.updateData(fullPostResults);
 
+                // Load More
                 mRecyclerView.removeMoreListener();
                 mRecyclerView.setupMoreListener(new OnMoreListener() {
                     @Override
                     public void onMoreAsked(int numberOfItems, int numberBeforeMore, int currentItemPos) {
                         // Fetch more from Api or DB at the last item position
-                        Log.d(Config.DEBUG_TAG, "ON MORE ASKED! numItems " + String.valueOf(numberOfItems) + " and beforeMore: " + String.valueOf(numberBeforeMore) + " vs currentItemPos " + String.valueOf(currentItemPos));
+
                         String lastTimestamp = mAdapter.getPost(currentItemPos).mTimestamp;
                         String urlQuery = buildQueryString(currQueryTag, lastTimestamp);
-
                         sendTumblrRequest(urlQuery);
+
+                        // Animate loadmore image
+//                        ImageView loadMoreImage = (ImageView) findViewById(R.id.loadMoreView);
+//                        Animation testAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
+//                        testAnim.setRepeatCount(Animation.INFINITE);
+//                        testAnim.setRepeatMode(Animation.REVERSE);
+//                        loadMoreImage.startAnimation(testAnim);
                     }
-                }, 1);
+                }, 2);
 
             } catch (JSONException e) {
                 e.printStackTrace();

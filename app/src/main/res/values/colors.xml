@@ -6,4 +6,6 @@
     <color name="gray">#7e7e7e</color>
     <color name="gray_light">#d3d3d3</color>
     <color name="gray_dark">#212121</color>
+
+    <color name="favorite">#FFA812</color>
 </resources>

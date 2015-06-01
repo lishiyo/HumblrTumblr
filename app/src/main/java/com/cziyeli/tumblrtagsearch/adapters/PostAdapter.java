@@ -138,7 +138,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         // Every post has blog name, notes count, post source, and maybe tags
         viewHolder.blogName.setText(post.mBlogName);
-        viewHolder.noteCount.setText(post.mNoteCount);
+        viewHolder.noteCount.setText(post.mNoteCount + " notes");
 
         // For post source, set text as blogname or link publisher, with href to post
         viewHolder.postSource.setText(post.sourceToLink());
@@ -171,6 +171,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private void handlePhotoPosts(ViewHolder viewHolder, Post post){
 
         if (post.mPhotos != null) {
+            viewHolder.postPhotoLayout.setVisibility(View.VISIBLE);
 
             // Remove previous extra photo views
             int numChildViews = viewHolder.postPhotoLayout.getChildCount();
@@ -184,10 +185,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             if (firstPhotoUrl != null) {
                 Picasso.with(this.mContext)
                         .load(firstPhotoUrl)
-                        .placeholder(R.mipmap.ic_launcher)
+                        .placeholder(Config.PLACEHOLDER_IMG)
                         .into(viewHolder.postPhotoFirst);
-            } else {
-                viewHolder.postPhotoFirst.setImageResource(R.mipmap.ic_launcher);
             }
 
             // If we have more than one photo, dynamically generate ImageView and add to postPhotoLayout
@@ -205,13 +204,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     if (nextPhotoUrl != null) {
                         Picasso.with(this.mContext)
                                 .load(nextPhotoUrl)
-                                .placeholder(R.mipmap.ic_launcher)
+                                .placeholder(Config.PLACEHOLDER_IMG)
                                 .into(photoView);
                     }
                 }
 
             }
-
+        } else { // no photos!
+            viewHolder.postPhotoLayout.setVisibility(View.GONE);
         }
 
         if (post.mCaption != null && post.mCaption.length() > 0) {
@@ -253,6 +253,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
         if (post.mLinkDescription != null && post.mLinkDescription.length() > 0) {
             viewHolder.linkDescription.setText(Html.fromHtml(post.mLinkDescription));
+            viewHolder.linkDescription.setVisibility(View.VISIBLE);
         }
     }
 

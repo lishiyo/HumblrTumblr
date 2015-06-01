@@ -71,4 +71,20 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="ButtonWide">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:padding">@dimen/thin_strip</item>
+    </style>
+
+    <style name="Favorite">
+        <item name="android:gravity">end</item>
+        <item name="android:textColor">@color/favorite</item>
+        <item name="android:textSize">@dimen/text_main</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/content_row</item>
+    </style>
+
 </resources>

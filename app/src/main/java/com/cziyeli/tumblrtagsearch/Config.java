@@ -10,6 +10,8 @@ public class Config {
     public static final String OAUTH_TOKEN = "ZprxuJvgIh8J3YDcJTh1KZXcCYuOeSktbxGaN9Zcx1Vwlib27Z";
     public static final String OAUTH_SECRET = "Pt3IXzM250TlijYp02r4Ebp3YEFomQfx94B15VBwStJIee5vWe";
 
-    public static final String LIMIT = "20";
+    public static final String LIMIT = "5";
     public static final String TAGGED_BASE_URL = "http://api.tumblr.com/v2/tagged?";
+
+    public static final int PLACEHOLDER_IMG = R.drawable.cheep_yellow;
 }

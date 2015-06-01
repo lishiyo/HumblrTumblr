@@ -8,14 +8,28 @@
     <TextView
         android:id="@+id/postBlogName"
         style="@style/ClickableView"
-        android:layout_width="0dp"
-        android:layout_weight="2" />
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/content_row"
+        android:layout_weight="1" />
 
-    <TextView
-        android:id="@+id/postLink"
-        style="@style/ClickableView"
-        android:layout_weight="1"
-        android:gravity="end"
-        android:layout_width="0dp" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/content_row">
+
+        <ImageView
+            android:id="@+id/postFavorite"
+            android:src="@drawable/star_black"
+            android:tint="@color/favorite"
+            android:gravity="end"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/content_row" />
+
+        <TextView
+            android:text="@string/save_favorite"
+            style="@style/Favorite" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

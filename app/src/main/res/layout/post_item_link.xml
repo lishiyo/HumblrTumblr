@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/cardview_margin"
+    card_view:cardCornerRadius="@dimen/cardview_radius"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/post_header"
+            android:id="@+id/postHeader"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"></include>
+
+        <!-- link title goes to url -->
+        <TextView
+            android:id="@+id/textTitle"
+            style="@style/ContentText"
+            android:textSize="@dimen/text_title"
+            android:textColor="@color/gray_dark" />
+
+        <TextView
+            android:id="@+id/linkDescription"
+            style="@style/ContentText" />
+
+        <include layout="@layout/post_footer"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"></include>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

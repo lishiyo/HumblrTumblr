@@ -1,5 +1,7 @@
 package com.cziyeli.tumblrtagsearch.models;
 
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
@@ -46,12 +48,12 @@ public class Post {
 
     // Text Posts
     @SerializedName("title")
-    public String mTextTitle;
+    public String mTitle;
 
     @SerializedName("body")
     public String mTextBody;
 
-    // Video Posts - only support html5_capable
+    // Video Posts - only support html5 capable
     // player: [ { width, embed_code }, { width, embed_code } ]
     @SerializedName("player")
     public VideoPlayer[] mVideoPlayers;
@@ -61,6 +63,30 @@ public class Post {
 
     @SerializedName("html5_capable")
     public String mHtml5capable;
+
+    // Link Posts
+    @SerializedName("description")
+    public String mLinkDescription;
+
+    @SerializedName("url")
+    public String mLinkUrl;
+
+    @SerializedName("publisher")
+    public String mLinkPublisher;
+
+    // For post source, return href to post with display text blog or link publisher
+    public Spanned sourceToLink() {
+        if (this.mType.equals("link")) {
+            return buildLink(mPostUrl, mLinkPublisher);
+        } else {
+            return buildLink(mPostUrl, mBlogName);
+        }
+    };
+
+    public Spanned buildLink(String url, String displayText) {
+        String link = "<a href=\"" + url + "\">" + displayText + "</a>";
+        return Html.fromHtml(link);
+    };
 
     public String tagsToString() {
         String[] convertedTags = new String[this.mTags.length];

@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * https://api.tumblr.com/v2/tagged?tag=lol&api_key=fuiKNFp9vQFvjLNvx4sUwti4Yb5yGutBN4Xh10LXZhhRKjWlV4
  *  blog_name, type, tag[], post_url, note_count, caption, timestamp (to load more)
@@ -15,7 +17,7 @@ import com.google.gson.annotations.SerializedName;
  *  video - video_url, thumbnail_url, caption
  */
 
-public class Post {
+public class Post implements Serializable {
 
     @SerializedName("blog_name")
     public String mBlogName;
@@ -38,7 +40,7 @@ public class Post {
     @SerializedName("caption")
     public String mCaption; // both Photos and Videos
 
-    // Image Posts
+    // Photo Posts
     @SerializedName("image_permalink")
     public String mImagePermalink;
 
@@ -74,6 +76,36 @@ public class Post {
     @SerializedName("publisher")
     public String mLinkPublisher;
 
+    public static class Photo implements Serializable {
+        @SerializedName("caption")
+        public String photoCaption;
+
+        @SerializedName("original_size")
+        public OriginalPhoto originalPhoto;
+
+        public static class OriginalPhoto implements Serializable {
+            @SerializedName("url")
+            public String originalPhotoUrl;
+        }
+    }
+
+    public static class VideoPlayer implements Serializable {
+        @SerializedName("width")
+        public String width;
+
+        @SerializedName("embed_code")
+        public String embedCode;
+    }
+
+    /** UTILITIES **/
+
+    // parse a post's url for post id
+    public String getPostId(String path) {
+        String delimiters = "//|/";
+        String[] paths = path.split(delimiters);
+        return paths[3];
+    }
+
     // For post source, return href to post with display text blog or link publisher
     public Spanned sourceToLink() {
         if (this.mType.equals("link")) {
@@ -81,12 +113,12 @@ public class Post {
         } else {
             return buildLink(mPostUrl, mBlogName);
         }
-    };
+    }
 
     public Spanned buildLink(String url, String displayText) {
         String link = "<a href=\"" + url + "\">" + displayText + "</a>";
         return Html.fromHtml(link);
-    };
+    }
 
     public String tagsToString() {
         String[] convertedTags = new String[this.mTags.length];
@@ -100,26 +132,4 @@ public class Post {
     public boolean isValidVideo() {
         return (mHtml5capable != null && mHtml5capable.equals("true"));
     }
-
-    public static class Photo {
-        @SerializedName("caption")
-        public String photoCaption;
-
-        @SerializedName("original_size")
-        public OriginalPhoto originalPhoto;
-
-        public static class OriginalPhoto {
-            @SerializedName("url")
-            public String originalPhotoUrl;
-        }
-    }
-
-    public static class VideoPlayer {
-        @SerializedName("width")
-        public String width;
-
-        @SerializedName("embed_code")
-        public String embedCode;
-    }
-
 }

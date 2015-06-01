@@ -11,6 +11,8 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -33,12 +35,16 @@ public class MainActivity extends AppCompatActivity {
     private SuperRecyclerView mRecyclerView;
     private PostAdapter mAdapter;
     private String currQueryTag;
+    private Button showFavsBtn;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        showFavsBtn = (Button) findViewById(R.id.showFavsBtn);
+        if (showFavsBtn != null) {
+            showFavsBtn.setOnClickListener(mShowFavsListener);
+        }
         currQueryTag = "";
 
         // setup RecyclerView for Posts
@@ -55,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
         this.mAdapter = new PostAdapter(this, getLayoutInflater());
         this.mRecyclerView.setAdapter(mAdapter);
-
     }
 
     @Override
@@ -82,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+
+//        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
 //        if (id == R.id.action_settings) {
@@ -129,12 +135,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // MAKE REQUEST TO API **/
+
     private void sendTumblrRequest(String urlQuery){
         request = new JsonObjectRequest(urlQuery, null, new ResponseListener(), new ErrorListener());
         VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 
-    // Response listener for Volley
+    // Success response listener for Volley
     private class ResponseListener implements Response.Listener<JSONObject> {
         @Override
         public void onResponse(JSONObject response){
@@ -154,8 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onMoreAsked(int numberOfItems, int numberBeforeMore, int currentItemPos) {
                         // Fetch more from Api or DB at the last item position
-
-                        String lastTimestamp = mAdapter.getPost(currentItemPos).mTimestamp;
+                        String lastTimestamp = mAdapter.getPost(currentItemPos + 1).mTimestamp;
                         String urlQuery = buildQueryString(currQueryTag, lastTimestamp);
                         sendTumblrRequest(urlQuery);
 
@@ -177,7 +184,17 @@ public class MainActivity extends AppCompatActivity {
     private class ErrorListener implements Response.ErrorListener{
         @Override
         public void onErrorResponse(VolleyError error){
-            Log.e("omg android", "createVolley error onResponse");
+            Log.e(Config.DEBUG_TAG, "createVolley error onResponse");
         }
     }
+
+    /** SHOW FAVORITE POSTS **/
+
+    private View.OnClickListener mShowFavsListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getApplicationContext(), FavoritesActivity.class);
+            startActivity(intent);
+        }
+    };
 }

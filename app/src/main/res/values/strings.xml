@@ -9,4 +9,7 @@
     <string name="search_hint">gimme a tag</string>
     <string name="search_title">search tumblr</string>
     <string name="load_more">Next Page</string>
+
+    <string name="yes">fuck yeah!</string>
+    <string name="cancel">cancel</string>
 </resources>

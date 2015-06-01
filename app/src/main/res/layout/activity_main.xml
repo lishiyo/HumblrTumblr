@@ -28,4 +28,5 @@
         app:recyclerPadding="@dimen/cardview_padding"
         tools:context=".MainActivity" />
 
+
 </RelativeLayout>

@@ -1,6 +1,8 @@
 package com.cziyeli.tumblrtagsearch.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -17,10 +19,13 @@ import android.widget.TextView;
 
 import com.cziyeli.tumblrtagsearch.Config;
 import com.cziyeli.tumblrtagsearch.R;
+import com.cziyeli.tumblrtagsearch.models.InternalStorage;
 import com.cziyeli.tumblrtagsearch.models.Post;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * https://api.tumblr.com/v2/tagged?tag=lol&api_key=fuiKNFp9vQFvjLNvx4sUwti4Yb5yGutBN4Xh10LXZhhRKjWlV4
@@ -35,6 +40,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private Context mContext;
     private LayoutInflater mInflater;
     public ArrayList<Post> mPosts;
+    public List<Post> mSavedPosts;
+    
     private static final int TYPE_PHOTO = 0;
     private static final int TYPE_TEXT = 1;
     private static final int TYPE_VIDEO = 2;
@@ -45,6 +52,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         this.mContext = context;
         this.mInflater = inflater;
         this.mPosts = new ArrayList<>();
+
+        try {
+            mSavedPosts = (ArrayList<Post>) InternalStorage.readObject(mContext, Config.FAVS_KEY);
+        } catch (ClassNotFoundException e) {
+            mSavedPosts = new ArrayList<>();
+        } catch (IOException e) {
+            mSavedPosts = new ArrayList<>();
+            e.printStackTrace();
+        }
     }
 
     public void updateData(ArrayList<Post> data) {
@@ -58,8 +74,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
 
         this.mPosts.addAll(postResultsArray);
-        Log.d(Config.DEBUG_TAG, "UPDATE DATA count: " + String.valueOf(getItemCount()));
         notifyDataSetChanged();
+        Log.d(Config.DEBUG_TAG, "UPDATE DATA count: " + String.valueOf(getItemCount()));
     }
 
     /** UTILITIES **/
@@ -74,6 +90,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return mPosts == null ? 0 : mPosts.size();
+    }
+
+    @Override
+    public long getItemId(int position){
+        return position;
     }
 
     // Check what type of view is being passed
@@ -95,7 +116,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             default:
                 return TYPE_TEXT;
         }
-
     }
 
 
@@ -109,45 +129,79 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public PostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = null;
-        Context context = parent.getContext();
 
         switch (viewType) {
             case TYPE_PHOTO:
-                itemView = LayoutInflater.from(context).inflate(R.layout.post_item_photo, parent, false);
+                itemView = mInflater.inflate(R.layout.post_item_photo, parent, false);
                 break;
             case TYPE_TEXT:
-                itemView = LayoutInflater.from(context).inflate(R.layout.post_item_text, parent, false);
+                itemView = mInflater.inflate(R.layout.post_item_text, parent, false);
                 break;
             case TYPE_VIDEO:
-                itemView = LayoutInflater.from(context).inflate(R.layout.post_item_video, parent, false);
+                itemView = mInflater.inflate(R.layout.post_item_video, parent, false);
                 break;
             case TYPE_LINK:
-                itemView = LayoutInflater.from(context).inflate(R.layout.post_item_link, parent, false);
+                itemView = mInflater.inflate(R.layout.post_item_link, parent, false);
             default:
                 break;
         }
 
-        return (itemView != null) ? new ViewHolder(itemView, viewType) : null;
+        ViewHolder vh = (itemView != null) ? new ViewHolder(itemView, viewType) : null;
+        vh.savePostBlock.setOnClickListener(mSaveListener);
 
+        return vh;
     }
+
+    /** POST SAVING **/
+
+    private View.OnClickListener mSaveListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Post post = (Post) v.getTag();
+            createDialog(post);
+        }
+
+        private void createDialog(final Post post) {
+            AlertDialog.Builder savePostBuild = new AlertDialog.Builder(mContext);
+            savePostBuild.setMessage("Save Post to Favorites?");
+            savePostBuild.setCancelable(true);
+            savePostBuild.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // update mSavedPosts and save to internal storage
+                    try {
+                        mSavedPosts.add(post);
+                        Log.d(Config.DEBUG_TAG, String.valueOf(mSavedPosts.size()));
+                        InternalStorage.writeObject(mContext, Config.FAVS_KEY, mSavedPosts);
+
+                    } catch (IOException e) {
+                        Log.e(Config.DEBUG_TAG, e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    dialog.cancel();
+                }
+            });
+            savePostBuild.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+
+            AlertDialog savePostAlert = savePostBuild.create();
+            savePostAlert.show();
+        }
+    };
+
+
 
     // Called when the item in a row must be displayed
     @Override
     public void onBindViewHolder(PostAdapter.ViewHolder viewHolder, int position) {
         Post post = getPost(position);
 
-        // Every post has blog name, notes count, post source, and maybe tags
-        viewHolder.blogName.setText(post.mBlogName);
-        viewHolder.noteCount.setText(post.mNoteCount + " notes");
+        viewHolder.savePostBlock.setTag(post);
 
-        // For post source, set text as blogname or link publisher, with href to post
-        viewHolder.postSource.setText(post.sourceToLink());
-        viewHolder.postSource.setMovementMethod(LinkMovementMethod.getInstance());
-
-        if (post.mTags.length > 0) {
-            viewHolder.postTags.setText(post.tagsToString());
-            viewHolder.postTags.setVisibility(View.VISIBLE);
-        }
+        // // Every post has blog name, notes count, post source, and maybe tags
+        bindBasePost(viewHolder, post);
 
         switch (viewHolder.postType) {
             case TYPE_PHOTO:
@@ -166,8 +220,24 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     }
 
-    /** HANDLE POST TYPES BINDING **/
 
+
+
+    private void bindBasePost(PostAdapter.ViewHolder viewHolder, Post post) {
+        viewHolder.blogName.setText(post.mBlogName);
+        viewHolder.noteCount.setText(post.mNoteCount + " notes");
+
+        // For post source, set text as blogname or link publisher, with href to post
+        viewHolder.postSource.setText(post.sourceToLink());
+        viewHolder.postSource.setMovementMethod(LinkMovementMethod.getInstance());
+
+        if (post.mTags.length > 0) {
+            viewHolder.postTags.setText(post.tagsToString());
+            viewHolder.postTags.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /** HANDLE POST TYPES - BINDING TO VIEWHOLDER **/
     private void handlePhotoPosts(ViewHolder viewHolder, Post post){
 
         if (post.mPhotos != null) {
@@ -263,6 +333,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public TextView noteCount;
         public TextView postTags;
         public TextView postSource;
+        public LinearLayout savePostBlock;
         public int postType;
 
         // PHOTO POSTS
@@ -288,6 +359,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             noteCount = (TextView) itemView.findViewById(R.id.postNoteCount);
             postTags = (TextView) itemView.findViewById(R.id.postTagsRow);
             postSource = (TextView) itemView.findViewById(R.id.postSource);
+            savePostBlock = (LinearLayout) itemView.findViewById(R.id.savePostBlock);
 
             switch (viewType) {
                 case TYPE_PHOTO:
@@ -318,7 +390,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     break;
             }
 
+            // Set Save listener
+//            savePostBlock.setOnClickListener(this);
         }
+
+//        @Override
+//        public void onClick(View view) {
+//            Log.d(Config.DEBUG_TAG, "onClick savePostBlock at POSITION: " + getPosition());
+//        }
     }
 
 }

@@ -141,15 +141,17 @@ public class MainActivity extends AppCompatActivity {
                 String jsonData = response.getString("response");
                 Gson gson = new Gson();
                 Post[] postResults = gson.fromJson(jsonData, Post[].class);
-                final ArrayList<Post> postResultsArray = new ArrayList<>(Arrays.asList(postResults));
 
-                mAdapter.updateData(postResultsArray);
+                final ArrayList<Post> fullPostResults = new ArrayList<>(Arrays.asList(postResults));
+
+
+                mAdapter.updateData(fullPostResults);
 
                 mRecyclerView.removeMoreListener();
                 mRecyclerView.setupMoreListener(new OnMoreListener() {
                     @Override
                     public void onMoreAsked(int numberOfItems, int numberBeforeMore, int currentItemPos) {
-                        // Fetch more from Api or DB
+                        // Fetch more from Api or DB at the last item position
                         Log.d(Config.DEBUG_TAG, "ON MORE ASKED! numItems " + String.valueOf(numberOfItems) + " and beforeMore: " + String.valueOf(numberBeforeMore) + " vs currentItemPos " + String.valueOf(currentItemPos));
                         String lastTimestamp = mAdapter.getPost(currentItemPos).mTimestamp;
                         String urlQuery = buildQueryString(currQueryTag, lastTimestamp);

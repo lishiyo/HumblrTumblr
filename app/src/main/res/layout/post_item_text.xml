@@ -15,8 +15,7 @@
         <include layout="@layout/post_header"
             android:id="@+id/postHeader"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            ></include>
+            android:layout_width="match_parent"></include>
 
         <TextView
             android:id="@+id/textTitle"

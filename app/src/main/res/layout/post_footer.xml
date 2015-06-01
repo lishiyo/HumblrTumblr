@@ -9,16 +9,11 @@
     <TextView
         android:id="@+id/postTagsRow"
         style="@style/TagRow"
-        android:maxLines="2"
-        android:gravity="left"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:maxLines="2" />
 
     <TextView
         android:id="@+id/postNoteCount"
         style="@style/ClickableView"
-        android:gravity="left"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent" />
 
 </LinearLayout>

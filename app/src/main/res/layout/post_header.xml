@@ -8,17 +8,14 @@
     <TextView
         android:id="@+id/postBlogName"
         style="@style/ClickableView"
-        android:gravity="left"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_weight="2" />
 
     <TextView
         android:id="@+id/postLink"
         style="@style/ClickableView"
         android:layout_weight="1"
-        android:gravity="right"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:gravity="end"
+        android:layout_width="0dp" />
 
 </LinearLayout>

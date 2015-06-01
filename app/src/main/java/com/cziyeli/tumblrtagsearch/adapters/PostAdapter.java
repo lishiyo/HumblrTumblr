@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -36,17 +37,26 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private static final int TYPE_PHOTO = 0;
     private static final int TYPE_TEXT = 1;
     private static final int TYPE_VIDEO = 2;
-    public static final int TYPE_BUTTON = 99;
+    public static final int TYPE_LINK = 3;
 
     /** CONSTRUCTOR **/
     public PostAdapter(Context context, LayoutInflater inflater) {
         this.mContext = context;
         this.mInflater = inflater;
-        this.mPosts = new ArrayList<Post>();
+        this.mPosts = new ArrayList<>();
     }
 
     public void updateData(ArrayList<Post> data) {
-        this.mPosts.addAll(data);
+        ArrayList<Post> postResultsArray = new ArrayList<>();
+
+        // filter out !html5_capable videos
+        for (Post post : data) {
+            if (!post.mType.equals("video") || post.isValidVideo()) {
+                postResultsArray.add(post);
+            }
+        }
+
+        this.mPosts.addAll(postResultsArray);
         Log.d(Config.DEBUG_TAG, "UPDATE DATA count: " + String.valueOf(getItemCount()));
         notifyDataSetChanged();
     }
@@ -179,33 +189,27 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             if (post.mCaption != null && post.mCaption.length() > 0) {
                 viewHolder.photoCaption.setText(Html.fromHtml(post.mCaption));
                 viewHolder.photoCaption.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.photoCaption.setVisibility(View.GONE);
             }
 
         } else if (viewHolder.postType == TYPE_TEXT) {
             if (post.mTextTitle != null && post.mTextTitle.length() > 0) {
                 viewHolder.textTitle.setText(Html.fromHtml(post.mTextTitle));
                 viewHolder.textTitle.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.textTitle.setVisibility(View.GONE);
             }
+
             if (post.mTextBody != null && post.mTextBody.length() > 0) {
                 viewHolder.textBody.setText(Html.fromHtml(post.mTextBody));
                 viewHolder.textBody.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.textBody.setVisibility(View.GONE);
             }
         } else if (viewHolder.postType == TYPE_VIDEO) {
             Log.d(Config.DEBUG_TAG, "viewholder with type video");
             if (post.mCaption != null && post.mCaption.length() > 0) {
                 viewHolder.videoCaption.setVisibility(View.VISIBLE);
                 viewHolder.videoCaption.setText(Html.fromHtml(post.mCaption));
-            }  else {
-                viewHolder.videoCaption.setVisibility(View.GONE);
             }
-            // take narrowest player out of 250, 400, 500 and display in webView
+            // take smallest player out of 250, 400, 500 and display in webView
             if (post.mVideoPlayers != null && post.mVideoPlayers.length > 0) {
+                Log.d(Config.DEBUG_TAG, "viewholder with type video: " + post.mHtml5capable);
                 Post.VideoPlayer player = post.mVideoPlayers[0];
                 viewHolder.videoPlayerView.loadData(player.embedCode, "text/html", "utf-8");
             }
@@ -256,7 +260,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     final WebSettings settings = videoPlayerView.getSettings();
                     settings.setDefaultTextEncodingName("utf-8");
                     settings.setJavaScriptEnabled(true);
-                    settings.setLoadsImagesAutomatically(true);
+                    settings.setSupportZoom(true);
+                    settings.setBuiltInZoomControls(true);
+                    videoPlayerView.setWebChromeClient(new WebChromeClient());
                     break;
                 default:
                     break;

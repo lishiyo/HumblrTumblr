@@ -51,13 +51,16 @@ public class Post {
     @SerializedName("body")
     public String mTextBody;
 
-    // Video Posts
+    // Video Posts - only support html5_capable
     // player: [ { width, embed_code }, { width, embed_code } ]
     @SerializedName("player")
     public VideoPlayer[] mVideoPlayers;
 
     @SerializedName("thumbnail_url")
     public String mVideoThumbnailUrl;
+
+    @SerializedName("html5_capable")
+    public String mHtml5capable;
 
     public String tagsToString() {
         String[] convertedTags = new String[this.mTags.length];
@@ -66,6 +69,10 @@ public class Post {
             convertedTags[i] = tag;
         }
         return TextUtils.join(" ", convertedTags);
+    }
+
+    public boolean isValidVideo() {
+        return (mHtml5capable != null && mHtml5capable.equals("true"));
     }
 
     public static class Photo {

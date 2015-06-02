@@ -3,12 +3,13 @@ package com.cziyeli.tumblrtagsearch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.cziyeli.tumblrtagsearch.animations.BounceInDownInfinite;
 import com.cziyeli.tumblrtagsearch.models.InternalStorage;
-import com.daimajia.androidanimations.library.YoYo;
 
 
 public class MainActivity extends SearchableActivity {
@@ -19,9 +20,7 @@ public class MainActivity extends SearchableActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        YoYo.with(new BounceInDownInfinite())
-//                .duration(1000)
-                .playOn(findViewById(R.id.homeImage));
+        startAnimation();
 
         showFavsBtn = (Button) findViewById(R.id.showFavsBtn);
         if (showFavsBtn != null) {
@@ -32,6 +31,17 @@ public class MainActivity extends SearchableActivity {
         if (clearFavsBtn != null) {
             clearFavsBtn.setOnClickListener(mClearFavsListener);
         }
+    }
+
+    private void startAnimation() {
+        ImageView loadMoreImage = (ImageView) findViewById(R.id.homeImage);
+        Animation testAnim = AnimationUtils.loadAnimation(this, R.anim.fade_infinite);
+        loadMoreImage.startAnimation(testAnim);
+
+        //        YoYo.with(new BounceInDownInfinite())
+//                .duration(1000)
+//                .playOn(findViewById(R.id.homeImage));
+
     }
 
     /** SHOW/CLEAR FAVORITED POSTS **/

@@ -19,6 +19,7 @@
 
         <WebView
             android:id="@+id/postVideoPlayer"
+            android:layout_height="100dp"
             style="@style/ImageFullWidth" />
 
         <TextView

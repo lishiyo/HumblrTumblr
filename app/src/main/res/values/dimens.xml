@@ -16,4 +16,7 @@
 
     <dimen name="thin_strip">4dp</dimen>
     <dimen name="content_row">20dp</dimen>
+
+    <!-- posts -->
+    <dimen name="video_min_height">200dp</dimen>
 </resources>

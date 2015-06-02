@@ -302,7 +302,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         // take smallest player out of 250, 400, 500 and display in webView
         if (post.mVideoPlayers != null && post.mVideoPlayers.length > 0) {
             Post.VideoPlayer player = post.mVideoPlayers[0];
-            viewHolder.videoPlayerView.loadData(player.embedCode, "text/html", "utf-8");
+            // <video> tags have mVideoUrl and need loadUrl
+            if (post.mVideoUrl != null) {
+                int playerHeight = mContext.getResources().getDimensionPixelSize(R.dimen.video_min_height);
+                viewHolder.videoPlayerView.getLayoutParams().height = playerHeight;
+                viewHolder.videoPlayerView.loadUrl(post.mVideoUrl);
+            } else {
+                viewHolder.videoPlayerView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                viewHolder.videoPlayerView.loadData(player.embedCode, "text/html", "utf-8");
+            }
         }
     }
 
@@ -372,7 +380,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     settings.setJavaScriptEnabled(true);
                     settings.setSupportZoom(true);
                     settings.setBuiltInZoomControls(true);
-                    settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
                     settings.setUseWideViewPort(true);
                     break;
                 case TYPE_LINK:

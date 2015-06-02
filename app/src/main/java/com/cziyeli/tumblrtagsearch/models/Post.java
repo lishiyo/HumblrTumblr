@@ -60,6 +60,9 @@ public class Post implements Serializable {
     @SerializedName("player")
     public VideoPlayer[] mVideoPlayers;
 
+    @SerializedName("video_url") // Use for <video> tags
+    public String mVideoUrl;
+
     @SerializedName("thumbnail_url")
     public String mVideoThumbnailUrl;
 

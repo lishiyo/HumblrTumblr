@@ -21,6 +21,16 @@
         <item name="background">@color/background</item>
     </style>
 
+    <!-- HOME -->
+
+    <style name="ButtonWide">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:padding">@dimen/thin_strip</item>
+    </style>
+
     <!-- items that are always visible -->
     <style name="ClickableView">
         <item name="android:background">?android:selectableItemBackground</item>
@@ -45,20 +55,21 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="PostSource">
+    <style name="LightText">
         <item name="android:textSize">@dimen/text_main</item>
         <item name="android:textColor">@color/gray_light</item>
+        <item name="android:alpha">0.5</item>
+    </style>
+
+    <style name="PostSource" parent="LightText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">end</item>
         <item name="android:layout_weight">1</item>
         <item name="android:maxLines">1</item>
-        <!--<item name="android:autoLink">web</item>-->
     </style>
 
-    <style name="TagRow">
-        <item name="android:textSize">@dimen/text_main</item>
-        <item name="android:textColor">@color/gray_light</item>
+    <style name="TagRow" parent="LightText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">start</item>
@@ -75,18 +86,10 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="ButtonWide">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:padding">@dimen/thin_strip</item>
-    </style>
-
     <style name="Favorite">
-        <item name="android:gravity">end</item>
         <item name="android:textColor">@color/favorite</item>
         <item name="android:textSize">@dimen/text_main</item>
+        <item name="android:gravity">end</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/content_row</item>
     </style>

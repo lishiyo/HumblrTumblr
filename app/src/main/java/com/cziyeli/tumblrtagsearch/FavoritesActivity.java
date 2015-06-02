@@ -37,6 +37,7 @@ public class FavoritesActivity extends SearchableActivity {
         }
     }
 
+    // Don't add to back stack
     private void showPostResults() {
         // pass mSavedPosts to Bundle
         Bundle bundle = new Bundle();
@@ -45,12 +46,12 @@ public class FavoritesActivity extends SearchableActivity {
         // mPostResFrag's onCreateView sets up recyclerView and adapter
         mPostResFrag = new PostResultsFrag();
         mPostResFrag.setArguments(bundle);
-        mFT.add(R.id.postsResContainer, mPostResFrag).addToBackStack(null).commit();
+        mFT.add(R.id.postsResContainer, mPostResFrag).commit();
     }
 
     private void showNotFound() {
         NotFoundFrag mNotFoundFrag = new NotFoundFrag();
-        mFT.add(R.id.postsResContainer, mNotFoundFrag).addToBackStack(null).commit();
+        mFT.add(R.id.postsResContainer, mNotFoundFrag).commit();
     }
 
 }

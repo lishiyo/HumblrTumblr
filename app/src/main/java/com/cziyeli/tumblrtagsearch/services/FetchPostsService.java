@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by connieli on 6/2/15.
+ * Spawns worker thread, one request at a time - automatically calls stopSelf() when work queue is empty.
  */
 
 public class FetchPostsService extends IntentService {

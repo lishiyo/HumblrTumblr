@@ -125,13 +125,6 @@ public class SearchResultsActivity extends SearchableActivity {
                         String lastTimestamp = lastPost.mTimestamp;
                         String urlQuery = buildQueryString(currQueryTag, lastTimestamp);
                         sendTumblrRequest(urlQuery);
-
-                        // Animate loadmore image
-//                        ImageView loadMoreImage = (ImageView) findViewById(R.id.loadMoreView);
-//                        Animation testAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
-//                        testAnim.setRepeatCount(Animation.INFINITE);
-//                        testAnim.setRepeatMode(Animation.REVERSE);
-//                        loadMoreImage.startAnimation(testAnim);
                     }
                 }, 3);
 

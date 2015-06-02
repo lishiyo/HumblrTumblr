@@ -40,7 +40,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private Context mContext;
     private LayoutInflater mInflater;
     public ArrayList<Post> mPosts;
-    public List<Post> mSavedPosts;
+    public List<Post>  mSavedPosts = new ArrayList<>();
     
     private static final int TYPE_PHOTO = 0;
     private static final int TYPE_TEXT = 1;
@@ -56,9 +56,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         try {
             mSavedPosts = (ArrayList<Post>) InternalStorage.readObject(mContext, Config.FAVS_KEY);
         } catch (ClassNotFoundException e) {
-            mSavedPosts = new ArrayList<>();
+            e.printStackTrace();
         } catch (IOException e) {
-            mSavedPosts = new ArrayList<>();
             e.printStackTrace();
         }
     }
@@ -74,8 +73,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
 
         this.mPosts.addAll(postResultsArray);
-        notifyDataSetChanged();
         Log.d(Config.DEBUG_TAG, "UPDATE DATA count: " + String.valueOf(getItemCount()));
+        notifyDataSetChanged();
     }
 
     /** UTILITIES **/
@@ -169,9 +168,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     // update mSavedPosts and save to internal storage
                     try {
                         mSavedPosts.add(post);
-                        Log.d(Config.DEBUG_TAG, String.valueOf(mSavedPosts.size()));
                         InternalStorage.writeObject(mContext, Config.FAVS_KEY, mSavedPosts);
-
                     } catch (IOException e) {
                         Log.e(Config.DEBUG_TAG, e.getMessage());
                         e.printStackTrace();

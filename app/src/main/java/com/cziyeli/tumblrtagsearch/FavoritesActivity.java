@@ -1,16 +1,12 @@
 package com.cziyeli.tumblrtagsearch;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 
-import com.cziyeli.tumblrtagsearch.adapters.PostAdapter;
-import com.cziyeli.tumblrtagsearch.fragments.MainActivityStart;
+import com.cziyeli.tumblrtagsearch.fragments.NotFoundFrag;
+import com.cziyeli.tumblrtagsearch.fragments.PostResultsFrag;
 import com.cziyeli.tumblrtagsearch.models.InternalStorage;
 import com.cziyeli.tumblrtagsearch.models.Post;
-import com.malinskiy.superrecyclerview.SuperRecyclerView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -18,58 +14,43 @@ import java.util.ArrayList;
  */
 
 public class FavoritesActivity extends SearchableActivity {
-    private SuperRecyclerView mRecyclerView;
-    private PostAdapter mAdapter;
     public ArrayList<Post> mSavedPosts;
+    private android.support.v4.app.FragmentTransaction mFT;
+    private PostResultsFrag mPostResFrag;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_posts);
+        setContentView(R.layout.activity_favs);
+        mSavedPosts = null;
 
-        // setup RecyclerView for Posts
-        setupPostViews();
-
+        mFT = getSupportFragmentManager().beginTransaction();
         // get Post data
         getFavorites();
     }
 
-    private void setupPostViews() {
-        this.mRecyclerView = (SuperRecyclerView) findViewById(R.id.list);
-        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        this.mAdapter = new PostAdapter(this, getLayoutInflater());
-        this.mRecyclerView.setAdapter(mAdapter);
-    }
-
     private void getFavorites() {
         // Retrieve the list of posts from internal storage
-        try {
-            this.mSavedPosts = (ArrayList<Post>) InternalStorage.readObject(this, Config.FAVS_KEY);
-            Log.d(Config.DEBUG_TAG, "GOT FAVORITES! size: " + String.valueOf(mSavedPosts.size()));
-
-            for (Post post : mSavedPosts) {
-                Log.d(Config.DEBUG_TAG, "SAVED POST: " + post.mPostUrl);
-            }
-
-        } catch (ClassNotFoundException e) {
-            this.mSavedPosts = null;
-            // switch frag
+        if (InternalStorage.hasObjects(this, Config.FAVS_KEY)) {
+            showPostResults();
+        } else {
             showNotFound();
-        } catch (IOException e) {
-            this.mSavedPosts = null;
-            showNotFound();
-            e.printStackTrace();
         }
     }
 
-    private void showNotFound() {
-        Log.d(Config.DEBUG_TAG, "not found!");
-        MainActivityStart mainFrag = (MainActivityStart) getSupportFragmentManager().findFragmentById(R.id.mainFrag);
-        mainFrag.switchViews();
+    private void showPostResults() {
+        // pass mSavedPosts to Bundle
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("data", mSavedPosts);
 
-//        android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//        NotFoundFrag mNotFoundFrag = new NotFoundFrag();
-//        transaction.add(R.id.main_frag_container, mNotFoundFrag).commit();
+        // mPostResFrag's onCreateView sets up recyclerView and adapter
+        mPostResFrag = new PostResultsFrag();
+        mPostResFrag.setArguments(bundle);
+        mFT.add(R.id.postsResContainer, mPostResFrag).addToBackStack(null).commit();
+    }
+
+    private void showNotFound() {
+        NotFoundFrag mNotFoundFrag = new NotFoundFrag();
+        mFT.add(R.id.postsResContainer, mNotFoundFrag).addToBackStack(null).commit();
     }
 
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.cziyeli.tumblrtagsearch.Config;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,8 +22,6 @@ public final class InternalStorage {
     private InternalStorage() {}
 
     public static void writeObject(Context context, String key, Object object) throws IOException {
-        Log.d(Config.DEBUG_TAG, "writeObject with key: " + key);
-
         FileOutputStream fos = context.openFileOutput(key, Context.MODE_PRIVATE);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(object);
@@ -31,8 +30,6 @@ public final class InternalStorage {
     }
 
     public static Object readObject(Context context, String key) throws IOException, ClassNotFoundException {
-        Log.d(Config.DEBUG_TAG, "readObject with key: " + key);
-
         FileInputStream fis = context.openFileInput(key);
         ObjectInputStream ois = new ObjectInputStream(fis);
         Object object = ois.readObject();
@@ -40,6 +37,12 @@ public final class InternalStorage {
     }
 
     public static void clearStorage(Context context, String key) {
+        Log.d(Config.DEBUG_TAG, "clear Storage " + key);
+        context.deleteFile(key);
+    }
 
+    public static boolean hasObjects(Context context, String key) {
+        File file = context.getFileStreamPath(key);
+        return (file != null && file.exists());
     }
 }

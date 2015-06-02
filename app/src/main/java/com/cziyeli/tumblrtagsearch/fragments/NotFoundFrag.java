@@ -13,9 +13,6 @@ import com.cziyeli.tumblrtagsearch.R;
  */
 public class NotFoundFrag extends Fragment {
 
-    public NotFoundFrag() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

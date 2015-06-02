@@ -6,17 +6,20 @@
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
+        android:logo="@drawable/cheep_yellow"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
         <activity
             android:name=".MainActivity"
+            android:logo="@drawable/cheep_yellow"
             android:label="@string/app_name"
             android:theme="@style/Theme.MyCompatTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- to send action bar search requests -->
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".SearchResultsActivity" />
@@ -28,6 +31,9 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchResultsActivity" />
         </activity>
 
         <activity android:name=".SearchResultsActivity"

@@ -21,7 +21,7 @@
         <item name="background">@color/background</item>
     </style>
 
-    <!-- HOME -->
+    <!-- UNIVERSAL -->
 
     <style name="ButtonWide">
         <item name="android:layout_width">wrap_content</item>
@@ -29,6 +29,9 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:padding">@dimen/thin_strip</item>
+        <item name="android:background">@color/highlight2</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
     </style>
 
     <!-- items that are always visible -->
@@ -46,19 +49,32 @@
     <style name="ContentText">
         <item name="android:paddingLeft">@dimen/text_padding</item>
         <item name="android:paddingRight">@dimen/text_padding</item>
+        <item name="android:paddingTop">@dimen/text_padding</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:padding">@dimen/text_padding</item>
         <item name="android:gravity">start</item>
         <item name="android:textSize">@dimen/text_main</item>
         <item name="android:textColor">@color/gray</item>
-        <item name="android:visibility">gone</item>
+        <!--<item name="android:visibility">gone</item>-->
+    </style>
+
+    <style name="BoldText" parent="ContentText">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/text_bold</item>
     </style>
 
     <style name="LightText">
         <item name="android:textSize">@dimen/text_main</item>
         <item name="android:textColor">@color/gray_light</item>
-        <item name="android:alpha">0.5</item>
+        <item name="android:alpha">0.8</item>
+    </style>
+
+    <style name="PostHeader">
+        <item name="android:textColor">@color/post_header_text</item>
+        <item name="android:tint">@color/post_header_text</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/content_row</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="PostSource" parent="LightText">
@@ -87,7 +103,7 @@
     </style>
 
     <style name="Favorite">
-        <item name="android:textColor">@color/favorite</item>
+        <item name="android:textColor">@color/post_header_text</item>
         <item name="android:textSize">@dimen/text_main</item>
         <item name="android:gravity">end</item>
         <item name="android:layout_width">wrap_content</item>

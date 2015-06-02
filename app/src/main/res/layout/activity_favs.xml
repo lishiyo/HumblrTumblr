@@ -9,6 +9,6 @@
     android:paddingRight="@dimen/activity_gutters"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="0dp"
-    tools:context=".MainActivity">
-
+    tools:context=".FavoritesActivity">
+    <!-- frags added here -->
 </RelativeLayout>

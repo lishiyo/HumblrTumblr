@@ -6,9 +6,8 @@
     android:orientation="vertical"
     android:paddingLeft="@dimen/activity_gutters"
     android:paddingRight="@dimen/activity_gutters"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="0dp"
-    tools:context=".FavoritesActivity">
+    tools:context=".SearchResultsActivity">
 
     <com.malinskiy.superrecyclerview.SuperRecyclerView
         android:id="@+id/list"
@@ -19,6 +18,6 @@
         app:recyclerClipToPadding="false"
         app:layout_empty="@layout/posts_blank"
         app:recyclerPadding="@dimen/cardview_padding"
-        tools:context=".FavoritesActivity" />
+        tools:context=".SearchResultsActivity" />
 
 </LinearLayout>

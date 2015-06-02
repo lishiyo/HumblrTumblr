@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:padding="@dimen/text_padding"
+    android:textStyle="bold"
+    android:background="@color/highlight1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/postBlogName"
-        style="@style/ClickableView"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/content_row"
+        style="@style/PostHeader"
         android:layout_weight="1" />
 
     <LinearLayout
@@ -21,10 +21,8 @@
         <ImageView
             android:id="@+id/savePostIcon"
             android:src="@drawable/star_black"
-            android:tint="@color/favorite"
             android:gravity="end"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/content_row" />
+            style="@style/PostHeader" />
 
         <TextView
             android:id="@+id/savePostButton"

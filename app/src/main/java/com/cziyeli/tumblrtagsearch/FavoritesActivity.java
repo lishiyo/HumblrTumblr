@@ -3,7 +3,7 @@ package com.cziyeli.tumblrtagsearch;
 import android.os.Bundle;
 
 import com.cziyeli.tumblrtagsearch.fragments.NotFoundFrag;
-import com.cziyeli.tumblrtagsearch.fragments.PostResultsFrag;
+import com.cziyeli.tumblrtagsearch.fragments.PostFavoritesFrag;
 import com.cziyeli.tumblrtagsearch.models.InternalStorage;
 import com.cziyeli.tumblrtagsearch.models.Post;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class FavoritesActivity extends SearchableActivity {
     public ArrayList<Post> mSavedPosts;
     private android.support.v4.app.FragmentTransaction mFT;
-    private PostResultsFrag mPostResFrag;
+    private PostFavoritesFrag mPostResFrag;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +44,7 @@ public class FavoritesActivity extends SearchableActivity {
         bundle.putSerializable("data", mSavedPosts);
 
         // mPostResFrag's onCreateView sets up recyclerView and adapter
-        mPostResFrag = new PostResultsFrag();
+        mPostResFrag = new PostFavoritesFrag();
         mPostResFrag.setArguments(bundle);
         mFT.add(R.id.postsResContainer, mPostResFrag).commit();
     }

@@ -97,7 +97,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         return position;
     }
 
-    // Check what type of view is being passed
     @Override
     public int getItemViewType(int position) {
         Post post = getPost(position);
@@ -278,25 +277,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         if (post.mCaption != null && post.mCaption.length() > 0) {
             viewHolder.photoCaption.setText(Html.fromHtml(post.mCaption));
-            viewHolder.photoCaption.setVisibility(View.VISIBLE);
+//            viewHolder.photoCaption.setVisibility(View.VISIBLE);
         }
     }
 
     private void handleTextPosts(ViewHolder viewHolder, Post post) {
         if (post.mTitle != null && post.mTitle.length() > 0) {
             viewHolder.postTitle.setText(Html.fromHtml(post.mTitle));
-            viewHolder.postTitle.setVisibility(View.VISIBLE);
+//            viewHolder.postTitle.setVisibility(View.VISIBLE);
         }
 
         if (post.mTextBody != null && post.mTextBody.length() > 0) {
             viewHolder.textBody.setText(Html.fromHtml(post.mTextBody));
-            viewHolder.textBody.setVisibility(View.VISIBLE);
+//            viewHolder.textBody.setVisibility(View.VISIBLE);
         }
     }
 
     private void handleVideoPosts(ViewHolder viewHolder, Post post) {
         if (post.mCaption != null && post.mCaption.length() > 0) {
-            viewHolder.videoCaption.setVisibility(View.VISIBLE);
+//            viewHolder.videoCaption.setVisibility(View.VISIBLE);
             viewHolder.videoCaption.setText(Html.fromHtml(post.mCaption));
         }
         // take smallest player out of 250, 400, 500 and display in webView
@@ -319,11 +318,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         if (post.mTitle != null && post.mTitle.length() > 0) {
             viewHolder.postTitle.setText(post.buildLink(post.mLinkUrl, post.mTitle));
             viewHolder.postTitle.setMovementMethod(LinkMovementMethod.getInstance());
-            viewHolder.postTitle.setVisibility(View.VISIBLE);
+//            viewHolder.postTitle.setVisibility(View.VISIBLE);
         }
         if (post.mLinkDescription != null && post.mLinkDescription.length() > 0) {
             viewHolder.linkDescription.setText(Html.fromHtml(post.mLinkDescription));
-            viewHolder.linkDescription.setVisibility(View.VISIBLE);
+//            viewHolder.linkDescription.setVisibility(View.VISIBLE);
         }
     }
 

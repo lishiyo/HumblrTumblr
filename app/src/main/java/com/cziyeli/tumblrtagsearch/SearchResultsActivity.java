@@ -30,28 +30,27 @@ public class SearchResultsActivity extends SearchableActivity {
     private JsonObjectRequest request;
     private SuperRecyclerView mRecyclerView;
     private PostAdapter mAdapter;
-    private String currQueryTag;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posts);
 
-        currQueryTag = "";
-
-        // setup RecyclerView for Posts
-        setupPostViews();
-
-        // handle search
-        handleIntent(getIntent());
+        launchSearch();
     }
 
-    private void setupPostViews() {
-        this.mRecyclerView = (SuperRecyclerView) findViewById(R.id.list);
-        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    protected void setupPostViews() {
+        mRecyclerView = (SuperRecyclerView) findViewById(R.id.list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 //        this.mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        this.mAdapter = new PostAdapter(this, getLayoutInflater());
-        this.mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new PostAdapter(this, getLayoutInflater());
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    protected void handleIntent(Intent intent) {
+        this.mCurrQuery = intent.getStringExtra(SearchManager.QUERY);
+        String urlQuery = buildQueryString(mCurrQuery);
+        sendTumblrRequest(urlQuery);
     }
 
     // only if activity launchMode="singleTop"
@@ -59,13 +58,11 @@ public class SearchResultsActivity extends SearchableActivity {
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
 
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            setupPostViews();
-            handleIntent(intent);
-        }
+        launchSearch();
     }
 
-    private String buildQueryString(String query){
+    // Refactor
+    protected String buildQueryString(String query){
         Uri.Builder builtUri = Uri.parse(CONSTANTS.TAGGED_BASE_URL).buildUpon()
                 .appendQueryParameter("limit", CONSTANTS.LIMIT)
                 .appendQueryParameter("api_key", CONSTANTS.API_KEY)
@@ -74,7 +71,7 @@ public class SearchResultsActivity extends SearchableActivity {
         return builtUri.build().toString();
     }
 
-    private String buildQueryString(String query, String timestamp){
+    protected String buildQueryString(String query, String timestamp){
         Uri.Builder builtUri = Uri.parse(CONSTANTS.TAGGED_BASE_URL).buildUpon()
                 .appendQueryParameter("limit", CONSTANTS.LIMIT)
                 .appendQueryParameter("api_key", CONSTANTS.API_KEY)
@@ -84,20 +81,14 @@ public class SearchResultsActivity extends SearchableActivity {
         return builtUri.build().toString();
     }
 
-    private void handleIntent(Intent intent) {
-        this.currQueryTag = intent.getStringExtra(SearchManager.QUERY);
-        String urlQuery = buildQueryString(currQueryTag);
-        sendTumblrRequest(urlQuery);
-    }
-
-    // MAKE REQUEST TO API **/
+    // MAKE REQUEST TO TUMBLR API **/
 
     private void sendTumblrRequest(String urlQuery){
         request = new JsonObjectRequest(urlQuery, null, new ResponseListener(), new ErrorListener());
         VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 
-    // Success response listener for Volley
+    // Response listeners for Volley
     private class ResponseListener implements Response.Listener<JSONObject> {
         @Override
         public void onResponse(JSONObject response){
@@ -123,7 +114,7 @@ public class SearchResultsActivity extends SearchableActivity {
                             return;
                         }
                         String lastTimestamp = lastPost.mTimestamp;
-                        String urlQuery = buildQueryString(currQueryTag, lastTimestamp);
+                        String urlQuery = buildQueryString(mCurrQuery, lastTimestamp);
                         sendTumblrRequest(urlQuery);
                     }
                 }, 3);
@@ -137,7 +128,7 @@ public class SearchResultsActivity extends SearchableActivity {
     private class ErrorListener implements Response.ErrorListener{
         @Override
         public void onErrorResponse(VolleyError error){
-            Log.e(CONSTANTS.DEBUG_TAG, "createVolley error onResponse");
+            Log.e(CONSTANTS.DEBUG_TAG, "createVolley onErrorResponse");
         }
     }
 

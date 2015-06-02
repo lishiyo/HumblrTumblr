@@ -22,12 +22,17 @@ public class MainActivity extends SearchableActivity {
 
         startAnimation();
 
+        setupButtons();
+    }
+
+    protected void setupButtons() {
         showFavsBtn = (Button) findViewById(R.id.showFavsBtn);
+        clearFavsBtn = (Button) findViewById(R.id.clearFavs);
+
         if (showFavsBtn != null) {
             showFavsBtn.setOnClickListener(mShowFavsListener);
         }
 
-        clearFavsBtn = (Button) findViewById(R.id.clearFavs);
         if (clearFavsBtn != null) {
             clearFavsBtn.setOnClickListener(mClearFavsListener);
         }
@@ -39,8 +44,8 @@ public class MainActivity extends SearchableActivity {
         loadMoreImage.startAnimation(testAnim);
 
         //        YoYo.with(new BounceInDownInfinite())
-//                .duration(1000)
-//                .playOn(findViewById(R.id.homeImage));
+    //                .duration(1000)
+    //                .playOn(findViewById(R.id.homeImage));
 
     }
 

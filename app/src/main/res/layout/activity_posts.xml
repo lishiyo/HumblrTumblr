@@ -10,15 +10,22 @@
     android:paddingBottom="0dp"
     tools:context=".SearchResultsActivity">
 
-    <com.malinskiy.superrecyclerview.SuperRecyclerView
-        android:id="@+id/list"
-        android:layout_alignParentTop="true"
+    <fragment
+        android:name="com.cziyeli.tumblrtagsearch.fragments.PostSearchFrag"
+        android:layout="@layout/frag_post_results"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:scrollbarStyle="insideInset"
-        app:recyclerClipToPadding="false"
-        app:layout_empty="@layout/posts_blank"
-        app:recyclerPadding="@dimen/cardview_padding"
-        tools:context=".SearchResultsActivity" />
+        android:layout_height="match_parent">
+    </fragment>
+
+    <!--<com.malinskiy.superrecyclerview.SuperRecyclerView-->
+        <!--android:id="@+id/list"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:scrollbarStyle="insideInset"-->
+        <!--app:recyclerClipToPadding="false"-->
+        <!--app:layout_empty="@layout/posts_blank"-->
+        <!--app:recyclerPadding="@dimen/cardview_padding"-->
+        <!--tools:context=".SearchResultsActivity" />-->
 
 </RelativeLayout>

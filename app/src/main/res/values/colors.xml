@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#33e5b6</color>
     <color name="mainBackground">#e9eeed</color>
+    <color name="background">#33e5b6</color>
+    <color name="background1">#3FB8AF</color>
+    <color name="background2">#7FC7AF</color>
+    <color name="background3">#DAD8A7</color>
+    <color name="highlight1">#FF9E9D</color>
+    <color name="highlight2">#FF3D7F</color>
 
     <color name="gray">#7e7e7e</color>
     <color name="gray_light">#d3d3d3</color>
     <color name="gray_dark">#212121</color>
 
-    <color name="favorite">#FFA812</color>
+    <color name="cheep">#FFA812</color>
+    <color name="post_header_text">@android:color/white</color>
 </resources>

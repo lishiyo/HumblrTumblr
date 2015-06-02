@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"></include>
 
-        <!-- link title goes to url -->
+        <!-- link title goes to post url -->
         <TextView
             android:id="@+id/textTitle"
             style="@style/ContentText"

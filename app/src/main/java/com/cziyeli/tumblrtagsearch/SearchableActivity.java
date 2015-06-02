@@ -2,6 +2,7 @@ package com.cziyeli.tumblrtagsearch;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -12,16 +13,30 @@ import android.view.MenuItem;
  * Created by connieli on 6/1/15.
  */
 public class SearchableActivity extends AppCompatActivity {
-
+    public static final int TYPE_TUMBLR = 0;
+    public int mType;
+    protected String mCurrQuery = "";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
     }
 
+    protected void launchSearch() {
+        if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
+            // setup RecyclerView for Posts
+            setupPostViews();
+            handleIntent(getIntent());
+        }
+    }
+
+    protected void setupPostViews() {} ;
+    protected void handleIntent(Intent intent) {};
+
+    /** SEARCH ACTION BAR **/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -8,21 +8,25 @@
 
     <ImageView
         android:id="@+id/homeImage"
-        android:src="@drawable/sheep_white"
+        android:src="@drawable/pusheen_pink"
         android:layout_gravity="center"
         android:gravity="center"
+        android:padding="@dimen/activity_vertical_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/clearFavs"
-        android:text="@string/clear_favs"
+        android:id="@+id/showFavsBtn"
+        style="@style/ButtonWide"
+        android:text="@string/favorites"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/showFavsBtn"
-        android:text="@string/favorites"
+        android:id="@+id/clearFavs"
+        style="@style/ButtonWide"
+        android:background="@color/gray"
+        android:text="@string/clear_favs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

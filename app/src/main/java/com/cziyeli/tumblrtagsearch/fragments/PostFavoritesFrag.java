@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by connieli on 6/1/15.
  */
-public class PostResultsFrag extends Fragment {
+public class PostFavoritesFrag extends Fragment {
     private View mView;
     private SuperRecyclerView mRecyclerView;
     private PostAdapter mAdapter;
@@ -41,7 +41,7 @@ public class PostResultsFrag extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.frag_search_results, container, false);
+        mView = inflater.inflate(R.layout.frag_post_results, container, false);
         mRecyclerView = (SuperRecyclerView) mView.findViewById(R.id.list);
         mInflater = inflater;
         return mView;

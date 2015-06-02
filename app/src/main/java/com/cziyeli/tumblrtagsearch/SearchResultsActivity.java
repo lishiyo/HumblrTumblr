@@ -54,7 +54,7 @@ public class SearchResultsActivity extends SearchableActivity {
         this.mRecyclerView.setAdapter(mAdapter);
     }
 
-    // only if launchMode="singleTop"
+    // only if activity launchMode="singleTop"
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
@@ -66,18 +66,18 @@ public class SearchResultsActivity extends SearchableActivity {
     }
 
     private String buildQueryString(String query){
-        Uri.Builder builtUri = Uri.parse(Config.TAGGED_BASE_URL).buildUpon()
-                .appendQueryParameter("limit", Config.LIMIT)
-                .appendQueryParameter("api_key", Config.API_KEY)
+        Uri.Builder builtUri = Uri.parse(CONSTANTS.TAGGED_BASE_URL).buildUpon()
+                .appendQueryParameter("limit", CONSTANTS.LIMIT)
+                .appendQueryParameter("api_key", CONSTANTS.API_KEY)
                 .appendQueryParameter("tag", query);
 
         return builtUri.build().toString();
     }
 
     private String buildQueryString(String query, String timestamp){
-        Uri.Builder builtUri = Uri.parse(Config.TAGGED_BASE_URL).buildUpon()
-                .appendQueryParameter("limit", Config.LIMIT)
-                .appendQueryParameter("api_key", Config.API_KEY)
+        Uri.Builder builtUri = Uri.parse(CONSTANTS.TAGGED_BASE_URL).buildUpon()
+                .appendQueryParameter("limit", CONSTANTS.LIMIT)
+                .appendQueryParameter("api_key", CONSTANTS.API_KEY)
                 .appendQueryParameter("before", timestamp)
                 .appendQueryParameter("tag", query);
 
@@ -119,7 +119,7 @@ public class SearchResultsActivity extends SearchableActivity {
                         // Fetch more from Api or DB at the last item position
                         Post lastPost = mAdapter.getPost(currentItemPos + 2);
                         if (lastPost == null) {
-                            Toast.makeText(getBaseContext(), "No more posts!", Toast.LENGTH_LONG);
+                            Toast.makeText(SearchResultsActivity.this, "No more posts!", Toast.LENGTH_LONG).show();
                             return;
                         }
                         String lastTimestamp = lastPost.mTimestamp;
@@ -144,7 +144,7 @@ public class SearchResultsActivity extends SearchableActivity {
     private class ErrorListener implements Response.ErrorListener{
         @Override
         public void onErrorResponse(VolleyError error){
-            Log.e(Config.DEBUG_TAG, "createVolley error onResponse");
+            Log.e(CONSTANTS.DEBUG_TAG, "createVolley error onResponse");
         }
     }
 

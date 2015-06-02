@@ -30,7 +30,7 @@ public class FavoritesActivity extends SearchableActivity {
 
     private void getFavorites() {
         // Retrieve the list of posts from internal storage
-        if (InternalStorage.hasObjects(this, Config.FAVS_KEY)) {
+        if (InternalStorage.hasObjects(this, CONSTANTS.FAVS_KEY)) {
             showPostResults();
         } else {
             showNotFound();

@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.cziyeli.tumblrtagsearch.animations.BounceInDownInfinite;
 import com.cziyeli.tumblrtagsearch.models.InternalStorage;
+import com.daimajia.androidanimations.library.YoYo;
 
 
 public class MainActivity extends SearchableActivity {
@@ -15,6 +18,10 @@ public class MainActivity extends SearchableActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        YoYo.with(new BounceInDownInfinite())
+//                .duration(1000)
+                .playOn(findViewById(R.id.homeImage));
 
         showFavsBtn = (Button) findViewById(R.id.showFavsBtn);
         if (showFavsBtn != null) {
@@ -27,7 +34,7 @@ public class MainActivity extends SearchableActivity {
         }
     }
 
-    /** SHOW OR CLEAR FAVORITED POSTS **/
+    /** SHOW/CLEAR FAVORITED POSTS **/
 
     private View.OnClickListener mShowFavsListener = new View.OnClickListener() {
         @Override
@@ -40,7 +47,8 @@ public class MainActivity extends SearchableActivity {
     private View.OnClickListener mClearFavsListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            InternalStorage.clearStorage(getApplicationContext(), Config.FAVS_KEY);
+            InternalStorage.clearStorage(getApplicationContext(), CONSTANTS.FAVS_KEY);
+            Toast.makeText(MainActivity.this, "wiped!", Toast.LENGTH_SHORT).show();
         }
     };
 }

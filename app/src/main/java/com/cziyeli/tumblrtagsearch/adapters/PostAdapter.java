@@ -16,8 +16,9 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.cziyeli.tumblrtagsearch.Config;
+import com.cziyeli.tumblrtagsearch.CONSTANTS;
 import com.cziyeli.tumblrtagsearch.R;
 import com.cziyeli.tumblrtagsearch.models.InternalStorage;
 import com.cziyeli.tumblrtagsearch.models.Post;
@@ -54,7 +55,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         this.mPosts = new ArrayList<>();
 
         try {
-            mSavedPosts = (ArrayList<Post>) InternalStorage.readObject(mContext, Config.FAVS_KEY);
+            mSavedPosts = (ArrayList<Post>) InternalStorage.readObject(mContext, CONSTANTS.FAVS_KEY);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -73,7 +74,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
 
         this.mPosts.addAll(postResultsArray);
-        Log.d(Config.DEBUG_TAG, "UPDATE DATA count: " + String.valueOf(getItemCount()));
+        Log.d(CONSTANTS.DEBUG_TAG, "UPDATE DATA count: " + String.valueOf(getItemCount()));
         notifyDataSetChanged();
     }
 
@@ -151,7 +152,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         return vh;
     }
 
-    /** POST SAVING **/
+    /** POST FAVORITING **/
 
     private View.OnClickListener mSaveListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -168,12 +169,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     // update mSavedPosts and save to internal storage
                     try {
                         mSavedPosts.add(post);
-                        InternalStorage.writeObject(mContext, Config.FAVS_KEY, mSavedPosts);
+                        InternalStorage.writeObject(mContext, CONSTANTS.FAVS_KEY, mSavedPosts);
                     } catch (IOException e) {
-                        Log.e(Config.DEBUG_TAG, e.getMessage());
+                        Log.e(CONSTANTS.DEBUG_TAG, e.getMessage());
                         e.printStackTrace();
                     }
 
+                    Toast.makeText(mContext, "woo hoo!", Toast.LENGTH_SHORT).show();
                     dialog.cancel();
                 }
             });
@@ -187,8 +189,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             savePostAlert.show();
         }
     };
-
-
 
     // Called when the item in a row must be displayed
     @Override
@@ -214,11 +214,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 handleLinkPosts(viewHolder, post);
                 break;
         }
-
     }
-
-
-
 
     private void bindBasePost(PostAdapter.ViewHolder viewHolder, Post post) {
         viewHolder.blogName.setText(post.mBlogName);
@@ -234,7 +230,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
     }
 
-    /** HANDLE POST TYPES - BINDING TO VIEWHOLDER **/
+    /** HANDLE POST TYPES - BIND TO VIEWHOLDER **/
     private void handlePhotoPosts(ViewHolder viewHolder, Post post){
 
         if (post.mPhotos != null) {
@@ -252,7 +248,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             if (firstPhotoUrl != null) {
                 Picasso.with(this.mContext)
                         .load(firstPhotoUrl)
-                        .placeholder(Config.PLACEHOLDER_IMG)
+                        .placeholder(CONSTANTS.PLACEHOLDER_IMG)
                         .into(viewHolder.postPhotoFirst);
             }
 
@@ -262,7 +258,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                 for (int i = 1; i < post.mPhotos.length; i++) {
                     nextPhotoUrl = post.mPhotos[i].originalPhoto.originalPhotoUrl;
-                    Log.d(Config.DEBUG_TAG, "more than one photo, url: " + nextPhotoUrl);
 
                     ImageView photoView = new ImageView(mContext);
                     photoView.setAdjustViewBounds(true);
@@ -271,7 +266,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     if (nextPhotoUrl != null) {
                         Picasso.with(this.mContext)
                                 .load(nextPhotoUrl)
-                                .placeholder(Config.PLACEHOLDER_IMG)
+                                .placeholder(CONSTANTS.PLACEHOLDER_IMG)
                                 .into(photoView);
                     }
                 }
@@ -386,15 +381,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 default:
                     break;
             }
-
-            // Set Save listener
-//            savePostBlock.setOnClickListener(this);
         }
 
-//        @Override
-//        public void onClick(View view) {
-//            Log.d(Config.DEBUG_TAG, "onClick savePostBlock at POSITION: " + getPosition());
-//        }
     }
 
 }

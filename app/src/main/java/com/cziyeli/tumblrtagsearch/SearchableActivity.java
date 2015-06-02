@@ -19,6 +19,7 @@ public class SearchableActivity extends AppCompatActivity {
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setDisplayUseLogoEnabled(true);
     }
 
     @Override

@@ -5,9 +5,6 @@ package com.cziyeli.tumblrtagsearch.models;
  */
 
 import android.content.Context;
-import android.util.Log;
-
-import com.cziyeli.tumblrtagsearch.Config;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +34,6 @@ public final class InternalStorage {
     }
 
     public static void clearStorage(Context context, String key) {
-        Log.d(Config.DEBUG_TAG, "clear Storage " + key);
         context.deleteFile(key);
     }
 

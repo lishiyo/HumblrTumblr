@@ -12,7 +12,6 @@
 
         <activity
             android:name=".MainActivity"
-            android:logo="@drawable/cheep_yellow"
             android:label="@string/app_name"
             android:theme="@style/Theme.MyCompatTheme" >
             <intent-filter>
@@ -26,6 +25,7 @@
         </activity>
 
         <activity android:name=".FavoritesActivity"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.MyCompatTheme">
             <meta-data
@@ -37,6 +37,7 @@
         </activity>
 
         <activity android:name=".SearchResultsActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
@@ -53,6 +54,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
+
+        <service
+            android:name=".services.FetchPostsService"
+            android:exported="false"/>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

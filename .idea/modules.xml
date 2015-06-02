@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TumblrTagSearch.iml" filepath="$PROJECT_DIR$/TumblrTagSearch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HumblrTumblr.iml" filepath="$PROJECT_DIR$/HumblrTumblr.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

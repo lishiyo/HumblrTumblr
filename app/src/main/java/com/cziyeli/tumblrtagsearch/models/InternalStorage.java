@@ -38,4 +38,8 @@ public final class InternalStorage {
         Object object = ois.readObject();
         return object;
     }
+
+    public static void clearStorage(Context context, String key) {
+
+    }
 }

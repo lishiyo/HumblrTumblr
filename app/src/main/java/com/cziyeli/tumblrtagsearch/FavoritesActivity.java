@@ -1,7 +1,6 @@
 package com.cziyeli.tumblrtagsearch;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 
@@ -18,15 +17,15 @@ import java.util.ArrayList;
  * Created by connieli on 6/1/15.
  */
 
-public class FavoritesActivity extends AppCompatActivity {
+public class FavoritesActivity extends SearchableActivity {
     private SuperRecyclerView mRecyclerView;
     private PostAdapter mAdapter;
     public ArrayList<Post> mSavedPosts;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Log.d(Config.DEBUG_TAG, "creating favorites activyt");
+        setContentView(R.layout.activity_posts);
+
         // setup RecyclerView for Posts
         setupPostViews();
 

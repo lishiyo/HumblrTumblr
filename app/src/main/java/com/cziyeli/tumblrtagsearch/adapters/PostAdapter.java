@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.cziyeli.tumblrtagsearch.CONSTANTS;
 import com.cziyeli.tumblrtagsearch.R;
+import com.cziyeli.tumblrtagsearch.Utils;
 import com.cziyeli.tumblrtagsearch.models.InternalStorage;
 import com.cziyeli.tumblrtagsearch.models.Post;
 import com.squareup.picasso.Picasso;
@@ -74,11 +75,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
 
         this.mPosts.addAll(postResultsArray);
-        Log.d(CONSTANTS.DEBUG_TAG, "UPDATE DATA count: " + String.valueOf(getItemCount()));
         notifyDataSetChanged();
     }
 
-    /** UTILITIES **/
+    /** ADAPTER UTILITIES **/
+
     public Post getPost(int position) {
         if (mPosts != null && position >=0 && position < mPosts.size()) {
             return mPosts.get(position);
@@ -120,10 +121,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     /** VIEWHOLDER **/
 
-    /*
+    /**
     Change from ListView - rather than checking for a tag on a view in getView() before deciding to create a new instance instead of reusing an old one, RecyclerView API takes care of all the logic.
     Two methods implement view construction and reuse: onCreateViewHolder, onBindViewHolder
-    */
+    **/
 
     @Override
     public PostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -197,7 +198,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         viewHolder.savePostBlock.setTag(post);
 
         // // Every post has blog name, notes count, post source, and maybe tags
-        bindBasePost(viewHolder, post);
+        setupBasePost(viewHolder, post);
 
         switch (viewHolder.postType) {
             case TYPE_PHOTO:
@@ -215,7 +216,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
     }
 
-    private void bindBasePost(PostAdapter.ViewHolder viewHolder, Post post) {
+    private void setupBasePost(PostAdapter.ViewHolder viewHolder, Post post) {
         viewHolder.blogName.setText(post.mBlogName);
         viewHolder.noteCount.setText(post.mNoteCount + " notes");
 
@@ -225,11 +226,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         if (post.mTags.length > 0) {
             viewHolder.postTags.setText(post.tagsToString());
-            viewHolder.postTags.setVisibility(View.VISIBLE);
         }
+
+        Utils.toggleVisibility(viewHolder.postTags, post.mTags);
     }
 
-    /** HANDLE POST TYPES - BIND TO VIEWHOLDER **/
+    /** HANDLE POST TYPES - BIND DATA TO VIEWHOLDER **/
     private void handlePhotoPosts(ViewHolder viewHolder, Post post){
 
         if (post.mPhotos != null) {
@@ -277,27 +279,31 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         if (post.mCaption != null && post.mCaption.length() > 0) {
             viewHolder.photoCaption.setText(Html.fromHtml(post.mCaption));
-//            viewHolder.photoCaption.setVisibility(View.VISIBLE);
         }
+
+        Utils.toggleVisibility(viewHolder.photoCaption, post.mCaption);
     }
 
     private void handleTextPosts(ViewHolder viewHolder, Post post) {
         if (post.mTitle != null && post.mTitle.length() > 0) {
             viewHolder.postTitle.setText(Html.fromHtml(post.mTitle));
-//            viewHolder.postTitle.setVisibility(View.VISIBLE);
         }
 
         if (post.mTextBody != null && post.mTextBody.length() > 0) {
             viewHolder.textBody.setText(Html.fromHtml(post.mTextBody));
-//            viewHolder.textBody.setVisibility(View.VISIBLE);
         }
+
+        Utils.toggleVisibility(viewHolder.postTitle, post.mTitle);
+        Utils.toggleVisibility(viewHolder.textBody, post.mTextBody);
     }
 
     private void handleVideoPosts(ViewHolder viewHolder, Post post) {
         if (post.mCaption != null && post.mCaption.length() > 0) {
-//            viewHolder.videoCaption.setVisibility(View.VISIBLE);
             viewHolder.videoCaption.setText(Html.fromHtml(post.mCaption));
         }
+
+        Utils.toggleVisibility(viewHolder.videoCaption, post.mCaption);
+
         // take smallest player out of 250, 400, 500 and display in webView
         if (post.mVideoPlayers != null && post.mVideoPlayers.length > 0) {
             Post.VideoPlayer player = post.mVideoPlayers[0];
@@ -318,12 +324,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         if (post.mTitle != null && post.mTitle.length() > 0) {
             viewHolder.postTitle.setText(post.buildLink(post.mLinkUrl, post.mTitle));
             viewHolder.postTitle.setMovementMethod(LinkMovementMethod.getInstance());
-//            viewHolder.postTitle.setVisibility(View.VISIBLE);
         }
+
         if (post.mLinkDescription != null && post.mLinkDescription.length() > 0) {
             viewHolder.linkDescription.setText(Html.fromHtml(post.mLinkDescription));
-//            viewHolder.linkDescription.setVisibility(View.VISIBLE);
         }
+
+        Utils.toggleVisibility(viewHolder.postTitle, post.mTitle);
+        Utils.toggleVisibility(viewHolder.linkDescription, post.mLinkDescription);
     }
 
     // Instantiate all views

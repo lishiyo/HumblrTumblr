@@ -9,7 +9,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:src="@drawable/sheep_white"
+        android:src="@drawable/pusheen_sad"
         android:layout_margin="@dimen/activity_vertical_margin"
         android:layout_gravity="center"
         android:gravity="center"

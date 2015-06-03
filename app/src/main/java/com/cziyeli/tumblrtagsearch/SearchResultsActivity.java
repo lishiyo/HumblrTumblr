@@ -26,6 +26,7 @@ import java.util.Arrays;
 /**
  * Created by connieli on 6/1/15.
  */
+
 public class SearchResultsActivity extends SearchableActivity {
     private JsonObjectRequest request;
     private SuperRecyclerView mRecyclerView;
@@ -53,35 +54,7 @@ public class SearchResultsActivity extends SearchableActivity {
         sendTumblrRequest(urlQuery);
     }
 
-    // only if activity launchMode="singleTop"
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-
-        launchSearch();
-    }
-
-    // Refactor
-    protected String buildQueryString(String query){
-        Uri.Builder builtUri = Uri.parse(CONSTANTS.TAGGED_BASE_URL).buildUpon()
-                .appendQueryParameter("limit", CONSTANTS.LIMIT)
-                .appendQueryParameter("api_key", CONSTANTS.API_KEY)
-                .appendQueryParameter("tag", query);
-
-        return builtUri.build().toString();
-    }
-
-    protected String buildQueryString(String query, String timestamp){
-        Uri.Builder builtUri = Uri.parse(CONSTANTS.TAGGED_BASE_URL).buildUpon()
-                .appendQueryParameter("limit", CONSTANTS.LIMIT)
-                .appendQueryParameter("api_key", CONSTANTS.API_KEY)
-                .appendQueryParameter("before", timestamp)
-                .appendQueryParameter("tag", query);
-
-        return builtUri.build().toString();
-    }
-
-    // MAKE REQUEST TO TUMBLR API **/
+    /** REQUEST TO TUMBLR API **/
 
     private void sendTumblrRequest(String urlQuery){
         request = new JsonObjectRequest(urlQuery, null, new ResponseListener(), new ErrorListener());
@@ -132,4 +105,23 @@ public class SearchResultsActivity extends SearchableActivity {
         }
     }
 
+    // TODO: Refactor this
+    protected String buildQueryString(String query){
+        Uri.Builder builtUri = Uri.parse(CONSTANTS.TAGGED_BASE_URL).buildUpon()
+                .appendQueryParameter("limit", CONSTANTS.LIMIT)
+                .appendQueryParameter("api_key", CONSTANTS.API_KEY)
+                .appendQueryParameter("tag", query);
+
+        return builtUri.build().toString();
+    }
+
+    protected String buildQueryString(String query, String timestamp){
+        Uri.Builder builtUri = Uri.parse(CONSTANTS.TAGGED_BASE_URL).buildUpon()
+                .appendQueryParameter("limit", CONSTANTS.LIMIT)
+                .appendQueryParameter("api_key", CONSTANTS.API_KEY)
+                .appendQueryParameter("before", timestamp)
+                .appendQueryParameter("tag", query);
+
+        return builtUri.build().toString();
+    }
 }

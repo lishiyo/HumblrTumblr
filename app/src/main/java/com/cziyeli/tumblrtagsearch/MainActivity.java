@@ -15,6 +15,7 @@ import com.cziyeli.tumblrtagsearch.models.InternalStorage;
 public class MainActivity extends SearchableActivity {
     private Button showFavsBtn;
     private Button clearFavsBtn;
+    private ImageView mHomeImage;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +40,9 @@ public class MainActivity extends SearchableActivity {
     }
 
     private void startAnimation() {
-        ImageView loadMoreImage = (ImageView) findViewById(R.id.homeImage);
+        mHomeImage = (ImageView) findViewById(R.id.homeImage);
         Animation testAnim = AnimationUtils.loadAnimation(this, R.anim.fade_infinite);
-        loadMoreImage.startAnimation(testAnim);
+        mHomeImage.startAnimation(testAnim);
 
         //        YoYo.with(new BounceInDownInfinite())
     //                .duration(1000)

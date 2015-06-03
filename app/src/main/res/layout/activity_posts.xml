@@ -17,15 +17,4 @@
         android:layout_height="match_parent">
     </fragment>
 
-    <!--<com.malinskiy.superrecyclerview.SuperRecyclerView-->
-        <!--android:id="@+id/list"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:scrollbarStyle="insideInset"-->
-        <!--app:recyclerClipToPadding="false"-->
-        <!--app:layout_empty="@layout/posts_blank"-->
-        <!--app:recyclerPadding="@dimen/cardview_padding"-->
-        <!--tools:context=".SearchResultsActivity" />-->
-
 </RelativeLayout>

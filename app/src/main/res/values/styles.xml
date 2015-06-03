@@ -55,12 +55,13 @@
         <item name="android:gravity">start</item>
         <item name="android:textSize">@dimen/text_main</item>
         <item name="android:textColor">@color/gray</item>
-        <!--<item name="android:visibility">gone</item>-->
+        <item name="android:visibility">gone</item>
     </style>
 
     <style name="BoldText" parent="ContentText">
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/text_bold</item>
+        <item name="android:visibility">visible</item>
     </style>
 
     <style name="LightText">

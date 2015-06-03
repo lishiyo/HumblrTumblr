@@ -8,13 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 /**
  * Created by connieli on 6/1/15.
  */
 public class SearchableActivity extends AppCompatActivity {
-    public static final int TYPE_TUMBLR = 0;
-    public int mType;
     protected String mCurrQuery = "";
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +24,22 @@ public class SearchableActivity extends AppCompatActivity {
         actionBar.setDisplayUseLogoEnabled(true);
     }
 
+    // only if activity launchMode="singleTop"
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        launchSearch();
+    }
+
+    // Every SearchableActivity implements this interface
     protected void launchSearch() {
         if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
-            // setup RecyclerView for Posts
             setupPostViews();
             handleIntent(getIntent());
         }
     }
 
-    protected void setupPostViews() {} ;
+    protected void setupPostViews() {};
     protected void handleIntent(Intent intent) {};
 
     /** SEARCH ACTION BAR **/

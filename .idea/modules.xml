@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HumblrTumblr.iml" filepath="$PROJECT_DIR$/HumblrTumblr.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/applesearch-release-0.0.1/applesearch-release-0.0.1.iml" filepath="$PROJECT_DIR$/applesearch-release-0.0.1/applesearch-release-0.0.1.iml" />
     </modules>
   </component>
 </project>

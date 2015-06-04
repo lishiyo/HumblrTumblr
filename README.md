@@ -3,3 +3,7 @@ Android app - search by tag for an infinite scroll of Photo, Text, Video, Link, 
 
 Screenshots
 
+![Home](/docs/rsz_1home.png?raw=true)
+![Search](/docs/rsz_search.png?raw=true)
+![Favs](/docs/rsz_favs.png?raw=true)
+![Favs](/docs/rsz_lol.png?raw=true)

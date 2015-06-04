@@ -75,7 +75,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
 
         this.mPosts.addAll(postResultsArray);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(mPosts.size() - 1, postResultsArray.size());
     }
 
     /** ADAPTER UTILITIES **/

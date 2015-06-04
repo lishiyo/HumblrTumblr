@@ -3,7 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="favorites">My Favorites</string>
+    <string name="favorites">++ My Favorites ++</string>
     <string name="save_favorite">SAVE</string>
     <string name="clear_favs">Clear Favorites</string>
 

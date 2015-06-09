@@ -23,7 +23,7 @@ import com.cziyeli.tumblrtagsearch.R;
 import com.cziyeli.tumblrtagsearch.Utils;
 import com.cziyeli.tumblrtagsearch.models.InternalStorage;
 import com.cziyeli.tumblrtagsearch.models.Post;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -243,14 +243,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 viewHolder.postPhotoLayout.removeViews(1, numChildViews - 1);
             }
 
+            // TODO:: Switch to 640 down to 250
             // Photo posts must have at least one photo
             String firstPhotoUrl = post.mPhotos[0].originalPhoto.originalPhotoUrl;
 
             if (firstPhotoUrl != null) {
-                Picasso.with(this.mContext)
+                Ion.with(this.mContext)
                         .load(firstPhotoUrl)
-                        .placeholder(CONSTANTS.PLACEHOLDER_IMG)
-                        .into(viewHolder.postPhotoFirst);
+                        .withBitmap()
+                        .placeholder(R.drawable.abc_ic_clear_mtrl_alpha)
+                        .intoImageView(viewHolder.postPhotoFirst);
             }
 
             // If we have more than one photo, dynamically generate ImageView and add to postPhotoLayout
@@ -265,10 +267,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     photoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     viewHolder.postPhotoLayout.addView(photoView);
                     if (nextPhotoUrl != null) {
-                        Picasso.with(this.mContext)
+                        Ion.with(this.mContext)
                                 .load(nextPhotoUrl)
+                                .withBitmap()
                                 .placeholder(CONSTANTS.PLACEHOLDER_IMG)
-                                .into(photoView);
+                                .intoImageView(photoView);
                     }
                 }
 

@@ -1,7 +1,6 @@
 package com.cziyeli.tumblrtagsearch;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.cziyeli.tumblrtagsearch.fragments.NotFoundFrag;
 import com.cziyeli.tumblrtagsearch.fragments.PostFavoritesFrag;
@@ -51,7 +50,6 @@ public class FavoritesActivity extends SearchableActivity {
     }
 
     private void showNotFound() {
-        Log.d(CONSTANTS.DEBUG_TAG, "showNotFound");
         NotFoundFrag mNotFoundFrag = new NotFoundFrag();
         mFT.add(R.id.postsResContainer, mNotFoundFrag).commit();
     }

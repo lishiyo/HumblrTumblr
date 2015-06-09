@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:scrollbarStyle="insideInset"
-        app:recyclerClipToPadding="false"
+        app:recyclerClipToPadding="true"
         app:layout_empty="@layout/posts_blank"
         app:recyclerPadding="@dimen/cardview_padding"
         tools:context=".SearchResultsActivity" />

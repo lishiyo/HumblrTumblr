@@ -28,11 +28,11 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:recyclerview-v7:21.+'
     compile 'com.android.support:cardview-v7:21.+'
-    compile 'com.squareup.picasso:picasso:2.1.1'
-//    compile 'com.tumblr:jumblr:0.0.11'
     compile 'com.mcxiaoke.volley:library:1.0.+@aar'
+    compile 'com.koushikdutta.ion:ion:2.+'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.malinskiy:superrecyclerview:1.1.0'
+
     // animations
 //    compile 'com.nineoldandroids:library:2.4.0'
 //    compile 'com.daimajia.easing:library:1.0.1@aar'
